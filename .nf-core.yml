@@ -10,7 +10,7 @@ lint:
     - lib/Utils.groovy
     - lib/WorkflowMain.groovy
     - lib/NfcoreTemplate.groovy
-    - lib/Workflowsubmitdatairidanext.groovy
+    - lib/WorkflowSubmitdatairidanext.groovy
   files_unchanged:
     - assets/sendmail_template.txt
     - assets/email_template.html
@@ -22,6 +22,8 @@ lint:
     - assets/email_template.txt
     - docs/README.md
     - LICENSE
+    - .prettierignore
+    - .gitignore
   pipeline_name_conventions: False
   actions_awsfulltest: False
   multiqc_config:
