@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    phac-nml/iridanextexample
+    phac-nml/submitdatairidanext
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/phac-nml/iridanextexample
+    Github : https://github.com/phac-nml/submitdatairidanext
 ----------------------------------------------------------------------------------------
 */
 
@@ -39,13 +39,13 @@ WorkflowMain.initialise(workflow, params, log, args)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { IRIDANEXT } from './workflows/iridanextexample'
+include { SUBMITDATAIRIDANEXT } from './workflows/submitdatairidanext'
 
 //
-// WORKFLOW: Run main phac-nml/iridanextexample analysis pipeline
+// WORKFLOW: Run main phac-nml/submitdatairidanext analysis pipeline
 //
-workflow PHACNML_IRIDANEXT {
-    IRIDANEXT ()
+workflow PHACNML_SUBMITDATAIRIDANEXT {
+    SUBMITDATAIRIDANEXT ()
 }
 
 /*
@@ -59,7 +59,7 @@ workflow PHACNML_IRIDANEXT {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    PHACNML_IRIDANEXT ()
+    PHACNML_SUBMITDATAIRIDANEXT ()
 }
 
 /*

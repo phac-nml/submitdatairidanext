@@ -1,11 +1,11 @@
 //
-// This file holds several functions specific to the workflow/iridanextexample.nf in the phac-nml/iridanextexample pipeline
+// This file holds several functions specific to the workflow/submitdatairidanext.nf in the phac-nml/submitdatairidanext pipeline
 //
 
 import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowIridanextExample {
+class WorkflowSubmitdatairidanext {
 
     //
     // Check and validate parameters
