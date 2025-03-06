@@ -1,6 +1,6 @@
 {
-    "name": "phac-nml/iridanextexample",
-    "homePage": "https://github.com/phac-nml/iridanextexample",
+    "name": "phac-nml/submitdatairidanext",
+    "homePage": "https://github.com/phac-nml/submitdatairidanext",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {

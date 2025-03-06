@@ -1,16 +1,18 @@
 repository_type: pipeline
 
+nf_core_version: 3.2.0
+
 lint:
   files_exist:
-    - assets/nf-core-iridanextexample_logo_light.png
-    - docs/images/nf-core-iridanextexample_logo_light.png
-    - docs/images/nf-core-iridanextexample_logo_dark.png
+    - assets/nf-core-submitdatairidanext_logo_light.png
+    - docs/images/nf-core-submitdatairidanext_logo_light.png
+    - docs/images/nf-core-submitdatairidanext_logo_dark.png
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
     - lib/Utils.groovy
     - lib/WorkflowMain.groovy
     - lib/NfcoreTemplate.groovy
-    - lib/WorkflowIridanextexample.groovy
+    - lib/WorkflowSubmitdatairidanext.groovy
   files_unchanged:
     - assets/sendmail_template.txt
     - assets/email_template.html
@@ -22,6 +24,8 @@ lint:
     - assets/email_template.txt
     - docs/README.md
     - LICENSE
+    - .prettierignore
+    - .gitignore
   pipeline_name_conventions: False
   actions_awsfulltest: False
   multiqc_config:
