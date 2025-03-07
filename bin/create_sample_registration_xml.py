@@ -11,13 +11,14 @@ import sys
 import xml.etree.ElementTree as ET
 
 from pathlib import Path
+from typing import Optional
 
 logger = logging.getLogger()
 
 def parse_input(input_path: Path):
     """
     Parse input CSV file and return a list of dictionaries.
-    
+
     :param input_path: Path to the CSV file.
     :type input_path: Path
     :return: List of dictionaries representing each row in the CSV.
@@ -34,27 +35,29 @@ def parse_input(input_path: Path):
 def convert_to_xml(sample_metadata: dict, fieldname_mapping: dict):
     """
     Convert a CSV file to an XML file in the specified format.
-    
+
     :param sample_metadata: Parsed sample metadata.
     :type sample_metadata: list[dict]
     :param fieldname_mapping: Mapping of XML element tags to sample metadata fieldnames.
     :type fieldname_mapping: dict[str, str]
+    :return: The sample registration XML element tree
+    :rtype: ET.ElementTree
     """
     root = ET.Element("SAMPLE_SET")
-    
+
     for row in sample_metadata:
         alias_fieldname = fieldname_mapping['sample_alias']
         sample = ET.SubElement(root, "SAMPLE", alias=row[alias_fieldname])
-        
+
         taxon_id_fieldname = fieldname_mapping['taxon_id']
         sample_name = ET.SubElement(sample, "SAMPLE_NAME")
         ET.SubElement(sample_name, "TAXON_ID").text = row[taxon_id_fieldname]
-        
+
         sample_attribute_mapping = {
             "collection_date": "collection date",
             "geographic_location_country": "geographic location (country and/or sea)",
         }
-        
+
         attributes = ET.SubElement(sample, "SAMPLE_ATTRIBUTES")
         for attribute_fieldname, attribute_tag in sample_attribute_mapping.items():
             attribute = ET.SubElement(attributes, "SAMPLE_ATTRIBUTE")
@@ -62,11 +65,18 @@ def convert_to_xml(sample_metadata: dict, fieldname_mapping: dict):
             ET.SubElement(attribute, "VALUE").text = row[attribute_fieldname]
 
     tree = ET.ElementTree(root)
-    
+
     return tree
 
-def write_output_xml(output_xml_tree, output_xml_path):
+def write_output_xml(output_xml_tree: ET.ElementTree, output_xml_path: Optional[Path]):
     """
+    Write output XML to file (or stdout if no output path provided)
+    :param output_xml_tree: XML data to write
+    :type output_xml_tree: ET.ElementTree
+    :param output_xml_path: Path to write XML file (or print to stdout if None)
+    :type output_xml_path: Optional[Path]
+    :return: None
+    :rtype: None
     """
     ET.indent(output_xml_tree, space="  ", level=0)
     if output_xml_path:
