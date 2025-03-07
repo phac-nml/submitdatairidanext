@@ -1,4 +1,6 @@
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A523.04.3-brightgreen.svg)](https://www.nextflow.io/)
+[![nf-core linting](https://github.com/phac-nml/submitdatairidanext/actions/workflows/linting.yml/badge.svg)](https://github.com/phac-nml/submitdatairidanext/actions/workflows/linting.yml)
+[![Pipeline CI](https://github.com/phac-nml/submitdatairidanext/actions/workflows/ci.yml/badge.svg)](https://github.com/phac-nml/submitdatairidanext/actions/workflows/ci.yml)
 
 # Example Pipeline for IRIDA Next
 
