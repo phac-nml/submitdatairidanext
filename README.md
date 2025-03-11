@@ -2,7 +2,7 @@
 [![nf-core linting](https://github.com/phac-nml/submitdatairidanext/actions/workflows/linting.yml/badge.svg)](https://github.com/phac-nml/submitdatairidanext/actions/workflows/linting.yml)
 [![Pipeline CI](https://github.com/phac-nml/submitdatairidanext/actions/workflows/ci.yml/badge.svg)](https://github.com/phac-nml/submitdatairidanext/actions/workflows/ci.yml)
 
-# Example Pipeline for IRIDA Next
+# Data Submission Pipeline for IRIDA Next
 
 Pipeline for submitting data to INSDC databases for IRIDA Next.
 
