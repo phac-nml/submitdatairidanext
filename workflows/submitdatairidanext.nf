@@ -68,7 +68,7 @@ workflow SUBMITDATAIRIDANEXT {
             // Add the ID to the set of processed IDs
             processedIDs << meta.id
 
-            fastq_2 ? 
+            fastq_2 ?
                 tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
                 tuple(meta, [ file(fastq_1) ])
     }.view()
