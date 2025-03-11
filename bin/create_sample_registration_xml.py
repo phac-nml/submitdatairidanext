@@ -26,7 +26,6 @@ def convert_to_xml(sample_metadata: dict):
     """
     root = ET.Element("SAMPLE_SET")
 
-    
     sample = ET.SubElement(root, "SAMPLE", alias=sample_metadata['sample_alias'])
 
     sample_name = ET.SubElement(sample, "SAMPLE_NAME")
@@ -61,12 +60,10 @@ def write_output_xml(output_xml_tree: ET.ElementTree, output_xml_path: Optional[
     if output_xml_path:
         output_xml_tree.write(output_xml_path, encoding="utf-8", xml_declaration=True)
         with open(output_xml_path, "a") as f:
-            f.write('\n')  
+            f.write('\n')
     else:
         sys.stdout.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         ET.dump(output_xml_tree)
-
-    
 
 
 def main(args):
