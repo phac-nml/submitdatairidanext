@@ -24,7 +24,7 @@ def main(args):
 
     # TODO: Complete the following lists with the valid values for each field
     valid_platforms = [
-        "illumina", 
+        "illumina",
     ]
     if args.sequencing_platform.lower() not in valid_platforms:
         print(f"Invalid sequencing platform: {args.sequencing_platform}", file=sys.stderr)
