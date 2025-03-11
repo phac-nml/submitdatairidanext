@@ -51,6 +51,6 @@
                 ]
             }
         },
-        "required": ["sample", "taxon_id", "collection_date", "fastq_1"]
+        "required": ["sample", "taxon_id", "collection_date", "country", "fastq_1"]
     }
 }
