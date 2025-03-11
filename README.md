@@ -10,9 +10,9 @@ Pipeline for submitting data to INSDC databases for IRIDA Next.
 
 The input to the pipeline is a standard sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | fastq_1         | fastq_2         | taxon_id  | collection_date | country |
-| ------- | --------------- | --------------- |----------:|----------------:|---------|
-| SampleA | file_1.fastq.gz | file_2.fastq.gz | 562       | 2025            | Canada  |
+| sample  | fastq_1         | fastq_2         | taxon_id | collection_date | country |
+| ------- | --------------- | --------------- | -------: | --------------: | ------- |
+| SampleA | file_1.fastq.gz | file_2.fastq.gz |      562 |            2025 | Canada  |
 
 The structure of this file is defined in [assets/schema_input.json](assets/schema_input.json). Validation of the sample sheet is performed by [nf-validation](https://nextflow-io.github.io/nf-validation/).
 
