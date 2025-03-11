@@ -10,9 +10,27 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "meta": ["id"],
+                "meta": ["irida_id"],
                 "unique": true,
                 "errorMessage": "Sample name must be provided and cannot contain spaces"
+            },
+            "taxon_id": {
+                "type": "string",
+                "pattern": "^\\d+$",
+                "meta": ["taxon_id"],
+                "errorMessage": "Provide a numeric NCBI taxonomy ID"
+            },
+            "collection_date": {
+                "type": "string",
+                "pattern": "^\\d{4}$",
+                "meta": ["collection_date"],
+                "errorMessage": "Provide a collection date"
+            },
+            "country": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "meta": ["country"],
+                "errorMessage": "Provide the name of the country where the sample was collected"
             },
             "fastq_1": {
                 "type": "string",
@@ -33,6 +51,6 @@
                 ]
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "taxon_id", "collection_date", "fastq_1"]
     }
 }

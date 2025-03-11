@@ -28,10 +28,7 @@ WorkflowSubmitdatairidanext.initialise(params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
-include { INPUT_CHECK          } from '../subworkflows/local/input_check'
+include { REGISTER_SAMPLES } from '../subworkflows/local/register_samples'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,26 +54,26 @@ workflow SUBMITDATAIRIDANEXT {
     // Track processed IDs
     def processedIDs = [] as Set
 
-    // Create a new channel of metadata from a sample sheet
-    // NB: `input` corresponds to `params.input` and associated sample sheet schema
-    input = Channel.fromSamplesheet("input").map {
-        def meta = it[0]
-        if (!meta.id) {
-            meta.id = meta.irida_id
-        } else {
-            // Non-alphanumeric characters (excluding _,-,.) will be replaced with "_"
-            meta.id = meta.id.replaceAll(/[^A-Za-z0-9_.\-]/, '_')
-        }
-        // Ensure ID is unique by appending meta.irida_id if needed
-        while (processedIDs.contains(meta.id)) {
-            meta.id = "${meta.id}_${meta.irida_id}"
-        }
-        // Add the ID to the set of processed IDs
-        processedIDs << meta.id
+    input = Channel.fromSamplesheet("input").map { meta, fastq_1, fastq_2 ->
+            if (!meta.id) {
+                meta.id = meta.irida_id
+            } else {
+                // Non-alphanumeric characters (excluding _,-,.) will be replaced with "_"
+                meta.id = meta.id.replaceAll(/[^A-Za-z0-9_.\-]/, '_')
+            }
+            // Ensure ID is unique by appending meta.irida_id if needed
+            while (processedIDs.contains(meta.id)) {
+                meta.id = "${meta.id}_${meta.irida_id}"
+            }
+            // Add the ID to the set of processed IDs
+            processedIDs << meta.id
 
-        tuple(meta)
-    }.loadIridaSampleIds().view()
+            fastq_2 ? 
+                tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
+                tuple(meta, [ file(fastq_1) ])
+    }.view()
 
+    REGISTER_SAMPLES(input.map{ meta, reads -> meta})
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
