@@ -10,6 +10,12 @@
 
 ## Pipeline tools
 
+## Upload Tools
+
+- [ena-webin-cli](https://github.com/enasequence/webin-cli)
+
+  > The European Bioinformatics Institute (EMBL-EBI)
+
 ## Software packaging/containerisation tools
 
 - [Anaconda](https://anaconda.com)
