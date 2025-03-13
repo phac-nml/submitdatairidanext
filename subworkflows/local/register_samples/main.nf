@@ -1,4 +1,4 @@
-include { CREATE_SAMPLE_REGISTRATION_XML} from '../../modules/local/create_sample_registration_xml'
+include { CREATE_SAMPLE_REGISTRATION_XML} from '../../../modules/local/create_sample_registration_xml'
 
 workflow REGISTER_SAMPLES {
     take:
