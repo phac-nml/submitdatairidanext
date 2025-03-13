@@ -72,12 +72,14 @@ workflow SUBMITDATAIRIDANEXT {
             fastq_2 ?
                 tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
                 tuple(meta, [ file(fastq_1) ])
-    }.view()
+    }
 
     if (params.destination == "SRA") {
         SUBMIT_TO_SRA(input)
+        ch_versions = ch_versions.mix(SUBMIT_TO_SRA.out.versions)
     } else if (params.destination == "ENA") {
         SUBMIT_TO_ENA(input)
+        ch_versions = ch_versions.mix(SUBMIT_TO_ENA.out.versions)
     }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
