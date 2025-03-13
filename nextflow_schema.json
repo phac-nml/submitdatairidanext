@@ -29,6 +29,16 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
+                "upload_username": {
+                    "type": "string",
+                    "description": "Username for upload to INSDC.",
+                    "fa_icon": "fas fa-user"
+                },
+                "upload_password": {
+                    "type": "string",
+                    "description": "Password for upload to INSDC.",
+                    "fa_icon": "fas fa-key"
+                },
                 "destination": {
                     "type": "string",
                     "description": "Destination for the data submission.",
