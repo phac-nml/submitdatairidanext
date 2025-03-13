@@ -28,7 +28,8 @@ WorkflowSubmitdatairidanext.initialise(params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { REGISTER_SAMPLES } from '../subworkflows/local/register_samples'
+include { SUBMIT_TO_SRA } from '../subworkflows/local/submit_to_sra'
+include { SUBMIT_TO_ENA } from '../subworkflows/local/submit_to_ena'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,9 +72,15 @@ workflow SUBMITDATAIRIDANEXT {
             fastq_2 ?
                 tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
                 tuple(meta, [ file(fastq_1) ])
-    }.view()
+    }
 
-    REGISTER_SAMPLES(input.map{ meta, reads -> meta})
+    if (params.destination == "SRA") {
+        SUBMIT_TO_SRA(input)
+        ch_versions = ch_versions.mix(SUBMIT_TO_SRA.out.versions)
+    } else if (params.destination == "ENA") {
+        SUBMIT_TO_ENA(input)
+        ch_versions = ch_versions.mix(SUBMIT_TO_ENA.out.versions)
+    }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
