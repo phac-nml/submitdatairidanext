@@ -1,4 +1,4 @@
-process CREATE_SAMPLE_REGISTRATION_XML {
+process CREATE_ENA_SAMPLE_REGISTRATION_XML {
     tag "$meta.id"
     label 'process_single'
 
@@ -13,7 +13,7 @@ process CREATE_SAMPLE_REGISTRATION_XML {
     val(meta)
 
     output:
-    tuple val(meta), path("*_sample_registration.xml")  , emit: sample_registration_xml
+    tuple val(meta), path("*_ena_sample_registration.xml")  , emit: sample_registration_xml
     path "versions.yml"                                 , emit: versions
 
     when:
@@ -21,16 +21,16 @@ process CREATE_SAMPLE_REGISTRATION_XML {
 
     script:
     """
-    create_sample_registration_xml.py \\
+    create_ena_sample_registration_xml.py \\
         --sample-alias ${meta.irida_id} \\
         --taxon-id ${meta.taxon_id} \\
         --collection-date ${meta.collection_date} \\
         --geographic-location-country ${meta.country} \\
-        --output ${meta.id}_sample_registration.xml
+        --output ${meta.id}_ena_sample_registration.xml
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        create_sample_registration_xml.py : 0.1.0
+        create_ena_sample_registration_xml.py : 0.1.0
     END_VERSIONS
     """
 }

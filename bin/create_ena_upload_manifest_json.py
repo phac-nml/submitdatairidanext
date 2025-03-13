@@ -73,6 +73,7 @@ def main(args):
     if args.output:
         with open(args.output, 'w') as f:
             json.dump(sample_upload_manifest, f, indent=4)
+            f.write('\n')
     else:
         print(json.dumps(sample_upload_manifest, indent=4))
 

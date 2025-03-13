@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test Process CREATE_SAMPLE_REGISTRATION_XML"
-    script "modules/local/create_sample_registration_xml/main.nf"
-    process "CREATE_SAMPLE_REGISTRATION_XML"
+    name "Test Process CREATE_ENA_SAMPLE_REGISTRATION_XML"
+    script "modules/local/create_ena_sample_registration_xml/main.nf"
+    process "CREATE_ENA_SAMPLE_REGISTRATION_XML"
 
     test("Basic execution, check output.") {
 
