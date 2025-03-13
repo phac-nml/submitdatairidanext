@@ -82,9 +82,9 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--sample-alias', type=str, help="Sample alias.")
-    parser.add_argument('--taxon-id', type=str, default="taxon_id", help="Sample taxon ID.")
-    parser.add_argument('--collection-date', type=str, default="collection_date", help="Sample collection date.")
-    parser.add_argument('--geographic-location-country', type=str, default="geographic_location_country", help="Sample collection geographic location (country).")
+    parser.add_argument('--taxon-id', type=str, help="Sample taxon ID.")
+    parser.add_argument('--collection-date', type=str, help="Sample collection date.")
+    parser.add_argument('--geographic-location-country', type=str, help="Sample collection geographic location (country).")
     parser.add_argument('-o', '--output', type=Path, help="Output Sample Submission XML File.")
     args = parser.parse_args()
     main(args)

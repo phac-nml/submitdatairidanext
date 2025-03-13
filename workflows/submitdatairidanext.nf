@@ -40,6 +40,7 @@ include { REGISTER_SAMPLES } from '../subworkflows/local/register_samples'
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { UPLOAD_READS } from '../subworkflows/local/upload_reads/main.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,6 +75,8 @@ workflow SUBMITDATAIRIDANEXT {
     }.view()
 
     REGISTER_SAMPLES(input.map{ meta, reads -> meta})
+
+    UPLOAD_READS(input)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
