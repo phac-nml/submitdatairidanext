@@ -29,26 +29,18 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
-                "project_name": {
+                "destination": {
                     "type": "string",
-                    "default": "assembly",
+                    "description": "Destination for the data submission.",
+                    "enum": ["SRA", "ENA"],
+                    "default": "SRA",
+                    "fa_icon": "fas fa-globe"
+                },
+                "experiment_name": {
+                    "type": "string",
                     "pattern": "^\\S+$",
-                    "description": "The name of the project.",
+                    "description": "The name of the experiment associated with the data submission.",
                     "fa_icon": "fas fa-tag"
-                },
-                "assembler": {
-                    "type": "string",
-                    "default": "stub",
-                    "fa_icon": "fas fa-desktop",
-                    "description": "The sequence assembler to use for sequence assembly.",
-                    "enum": ["default", "stub", "experimental"]
-                },
-                "random_seed": {
-                    "type": "integer",
-                    "default": 1,
-                    "fa_icon": "fas fa-dice-six",
-                    "description": "The random seed to use for sequence assembly.",
-                    "minimum": 1
                 },
                 "email": {
                     "type": "string",

@@ -28,7 +28,8 @@ WorkflowSubmitdatairidanext.initialise(params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { REGISTER_SAMPLES } from '../subworkflows/local/register_samples'
+include { SUBMIT_TO_SRA } from '../subworkflows/local/submit_to_sra'
+include { SUBMIT_TO_ENA } from '../subworkflows/local/submit_to_ena'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,7 +41,6 @@ include { REGISTER_SAMPLES } from '../subworkflows/local/register_samples'
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { UPLOAD_READS } from '../subworkflows/local/upload_reads/main.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,9 +74,11 @@ workflow SUBMITDATAIRIDANEXT {
                 tuple(meta, [ file(fastq_1) ])
     }.view()
 
-    REGISTER_SAMPLES(input.map{ meta, reads -> meta})
-
-    UPLOAD_READS(input)
+    if (params.destination == "SRA") {
+        SUBMIT_TO_SRA(input)
+    } else if (params.destination == "ENA") {
+        SUBMIT_TO_ENA(input)
+    }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

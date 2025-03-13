@@ -1,4 +1,4 @@
-process CREATE_UPLOAD_MANIFEST {
+process CREATE_ENA_UPLOAD_MANIFEST {
     tag "$meta.id"
     label 'process_single'
 
@@ -13,26 +13,26 @@ process CREATE_UPLOAD_MANIFEST {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_manifest.json")       , emit: upload_manifest
-    path "versions.yml"                            , emit: versions
+    tuple val(meta), path("*_ena_upload_manifest.json")  , emit: upload_manifest
+    path "versions.yml"                                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     """
-    create_upload_manifest_json.py \\
+    create_ena_upload_manifest_json.py \\
         --study-accession "" \\
         --sample-accession "" \\
         --experiment-name "" \\
         --library-name "" \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\
-        --output ${meta.id}_manifest.json
+        --output ${meta.id}_ena_upload_manifest.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        create_upload_manifest_json.py : 0.1.0
+        create_ena_upload_manifest_json.py : 0.1.0
     END_VERSIONS
     """
 }
