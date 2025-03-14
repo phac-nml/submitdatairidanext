@@ -30,3 +30,15 @@ indent_style = unset
 # ignore python
 [*.{py}]
 indent_style = unset
+
+# ignore ncbi metadata templates
+[/assets/ncbi_metadata_package_templates/*/*.xml]
+indent_style = unset
+
+[/assets/ncbi_metadata_package_templates/*/*.tsv]
+indent_style = unset
+end_of_line = unset
+
+[/docs/UI-lessSubmissionProtocol.md]
+indent_style = unset
+trim_trailing_whitespace = unset

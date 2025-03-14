@@ -35,7 +35,7 @@ def upload_file(file_to_upload: Path, username: str, password: str, server: str,
     if not ftp:
         logger.error("Could not connect to FTP server")
         exit(1)
-        
+
     logger.info(f"Connected to {server} as {username}")
     ftp.cwd(remote_path)
     logger.info(f"Changed directory to {remote_path}")
