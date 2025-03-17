@@ -3,8 +3,8 @@ process UPLOAD_TO_ENA {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ena-webin-cli:8.1.1--hdfd78af_0' :
-        'biocontainers/ena-webin-cli:8.1.1--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/ena-webin-cli:8.1.1--hdfd78af_1' :
+        'biocontainers/ena-webin-cli:8.1.1--hdfd78af_1' }"
 
     input:
     tuple val(meta), path(reads), path(upload_manifest)
