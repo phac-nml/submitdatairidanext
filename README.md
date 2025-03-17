@@ -6,6 +6,11 @@
 
 Pipeline for submitting data to INSDC databases for IRIDA Next.
 
+# Development Status
+
+This pipeline is currently in early stage development. Several aspects of core functionality are missing, untested and subject to change.
+**This pipeline is incomplete and not ready for production use.**
+
 # Input
 
 The input to the pipeline is a standard sample sheet (passed as `--input samplesheet.csv`) that looks like:
