@@ -39,6 +39,11 @@ indent_style = unset
 indent_style = unset
 end_of_line = unset
 
+[/assets/ncbi_example_submission_xml/sra.submission.bs.run.xml]
+indent_style = unset
+end_of_line = unset
+trim_trailing_whitespace = unset
+
 [/docs/UI-lessSubmissionProtocol.md]
 indent_style = unset
 trim_trailing_whitespace = unset

@@ -72,7 +72,7 @@ workflow SUBMITDATAIRIDANEXT {
             fastq_2 ?
                 tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
                 tuple(meta, [ file(fastq_1) ])
-    }
+    }.view()
 
     if (params.destination == "SRA") {
         SUBMIT_TO_SRA(input)

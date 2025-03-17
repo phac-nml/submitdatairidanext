@@ -52,6 +52,12 @@
                     "description": "The name of the experiment associated with the data submission.",
                     "fa_icon": "fas fa-tag"
                 },
+                "bioproject_accession": {
+                    "type": "string",
+                    "pattern": "^\\S+$",
+                    "description": "The BioProject accession associated with the data submission (must exist prior to upload).",
+                    "fa_icon": "fas fa-tag"
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",

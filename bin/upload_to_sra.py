@@ -5,11 +5,11 @@ Uploads files to an FTP server
 """
 
 import argparse
+import ftplib
 import logging
 import os
 
 from pathlib import Path
-from ftplib import FTP
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ def upload_file(file_to_upload: Path, username: str, password: str, server: str,
     """
     ftp = None
     try:
-        ftp = FTP(server)
+        ftp = ftplib.FTP(server)
     except ConnectionRefusedError as e:
         logger.error(f"Could not connect to {server} as {username}")
         exit(1)
@@ -37,8 +37,13 @@ def upload_file(file_to_upload: Path, username: str, password: str, server: str,
         exit(1)
 
     logger.info(f"Connected to {server} as {username}")
-    ftp.cwd(remote_path)
+    try:
+        ftp.cwd(remote_path)
+    except ftplib.error_perm as e:
+        logger.error(f"Could not change to directory {remote_path}")
+        exit(1)
     logger.info(f"Changed directory to {remote_path}")
+
     with open(file_path, 'rb') as f:
         ftp.storbinary(f"STOR {os.path.basename(file_path)}", f)
         logger.info(f"Uploaded {file_path} to {remote_path}")

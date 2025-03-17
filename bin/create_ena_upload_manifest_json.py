@@ -9,6 +9,9 @@ import sys
 from pathlib import Path
 
 def main(args):
+    if args.fastq2 == 'null':
+        args.fastq2 = None
+
     instrument_lookup = {
         "miseq": "Illumina MiSeq",
         "hiseq": "Illumina HiSeq",
