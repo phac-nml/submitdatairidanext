@@ -30,6 +30,42 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
+      - name: Install vsftpd
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y vsftpd
+
+      - name: Configure vsftpd
+        run: |
+          # Backup original config
+          sudo mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
+
+          # Write minimal config
+          cat <<EOF | sudo tee /etc/vsftpd.conf
+          listen=YES
+          anonymous_enable=YES
+          write_enable=YES
+          local_enable=YES
+          chroot_local_user=YES
+          allow_writeable_chroot=YES
+          pasv_enable=YES
+          pasv_min_port=10000
+          pasv_max_port=10010
+          pasv_address=127.0.0.1
+          listen_ipv6=NO
+          EOF
+
+          # Create FTP user and home dir
+          sudo useradd -m ftpuser
+          echo "ftpuser:ftppass" | sudo chpasswd
+          sudo mkdir -p /home/ftpuser/submit/Test
+          sudo chown -R ftpuser:ftpuser /home/ftpuser/submit
+
+      - name: Start FTP server
+        run: |
+          sudo service vsftpd start
+          sleep 5  # Give server a moment to come up
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
@@ -56,4 +92,4 @@ jobs:
 
       - name: Nextflow run with test profile
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --sra_ftp_base_dir /home/ftpuser/submit --sra_submission_dir Test --outdir ./results
