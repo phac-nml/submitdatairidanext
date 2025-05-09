@@ -52,7 +52,13 @@
                     "default": "ftp-private.ncbi.nlm.nih.gov",
                     "fa_icon": "fas fa-server"
                 },
-                "sra_submission_directory": {
+                "sra_ftp_base_dir": {
+                    "type": "string",
+                    "description": "Remote directory on NCBI SRA FTP servers to deposit submission in. Defaults to `/submit`",
+                    "default": "/submit",
+                    "fa_icon": "fas fa-server"
+                },
+                "sra_submission_dir": {
                     "type": "string",
                     "description": "Remote subdirectory on NCBI SRA FTP servers to deposit submission in. Must be either `Production` or `Test`.",
                     "enum": ["Production", "Test"],
