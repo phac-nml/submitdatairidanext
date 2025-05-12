@@ -90,7 +90,14 @@ jobs:
           # Create a test file
           echo "This is a test file." > testfile.txt
           # Upload the test file to the FTP server
-          curl -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/
+          curl -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt
+          # Check if the file was uploaded successfully
+          if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
+            echo "Test file uploaded successfully!"
+          else
+            echo "Failed to upload test file!"
+            exit 1
+          fi
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
