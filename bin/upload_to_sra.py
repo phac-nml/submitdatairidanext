@@ -27,9 +27,10 @@ def connect_and_login(username: str, password: str, server: str, remote_path: st
     """
     ftp = None
     try:
-        ftp = ftplib.FTP(server)
+        ftp = ftplib.FTP(server, user=username, passwd=password)
+        ftp.set_pasv(True)
     except ConnectionRefusedError as e:
-        logger.error(f"Could not connect to {server}")
+        logger.error(f"Could not connect to {server} as {username}")
         exit(1)
     except Exception as e:
         logger.error(f"An error occurred: {e}")
@@ -37,10 +38,7 @@ def connect_and_login(username: str, password: str, server: str, remote_path: st
     if not ftp:
         logger.error("Could not connect to FTP server")
         exit(1)
-    try:
-        ftp.login(username, password)
-    except ftplib.error_perm as e:
-        logger.error(f"Could not login as {username}")
+
     logger.info(f"Connected to {server} as {username}")
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
