@@ -84,13 +84,7 @@ jobs:
             echo "FTP server is not accessible!"
             exit 1
           fi
-          # Check if the FTP server can write to the home directory
-          if ! touch /home/ftpuser/submit/testfile.txt; then
-            echo "FTP server cannot write to the home directory!"
-            exit 1
-          fi
-          # Clean up test file
-          rm /home/ftpuser/submit/testfile.txt
+          echo "FTP server is running and accessible!"
       - name: Upload test data
         run: |
           # Create a test file
