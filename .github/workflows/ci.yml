@@ -43,7 +43,7 @@ jobs:
           # Write minimal config
           cat <<EOF | sudo tee /etc/vsftpd.conf
           listen=YES
-          listen_ipv6=NO
+          listen_ipv6=YES
           anonymous_enable=YES
           write_enable=YES
           local_enable=YES
