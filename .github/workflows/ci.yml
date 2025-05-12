@@ -69,6 +69,7 @@ jobs:
           sudo setfacl -b /home/ftpuser/submit/Test
           sudo chmod -R 777 /home/ftpuser/submit
           cat /etc/vsftpd.conf
+          sudo iptables -A INPUT -p tcp --dport 10000:10010 -j ACCEPT
       - name: Confirm permissions
         run: |
           ls -ld /home/ftpuser/submit/Test
@@ -107,7 +108,7 @@ jobs:
           # Upload the test file to the FTP server
           # This is failing with error: curl: (25) Failed FTP upload: 550
           # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          curl -v --ftp-port :10000 -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+          curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
             echo "Upload failed. Capturing vsftpd logs..."
             sudo cat /var/log/vsftpd.log
             exit 1
