@@ -43,6 +43,7 @@ jobs:
           # Write minimal config
           cat <<EOF | sudo tee /etc/vsftpd.conf
           listen=YES
+          listen_address=127.0.0.1
           listen_ipv6=NO
           anonymous_enable=NO
           write_enable=YES
@@ -91,13 +92,12 @@ jobs:
           # Check if the FTP server is listening on port 21
           echo "Checking if FTP server is listening on port 21..."
           sudo netstat -tuln | grep ':21'
-          # Check if the FTP server is listening on passive ports
-          echo "Checking if FTP server is listening on passive ports..."
-          sudo netstat -tuln | grep ':100'
           if ! sudo netstat -tuln | grep ':21' > /dev/null; then
             echo "FTP server is not listening on port 21!"
             exit 1
           fi
+          echo "Checking if FTP server is listening on passive ports..."
+          sudo netstat -tuln | grep ':100'
           # Check if the FTP server is accessible
           echo "Checking if FTP server is accessible..."
           if ! curl -s --user ftpuser:ftppass ftp://localhost:21/ > /dev/null; then
@@ -112,17 +112,11 @@ jobs:
           # Upload the test file to the FTP server
           # This is failing with error: curl: (25) Failed FTP upload: 550
           # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          # curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
-          #   echo "Upload failed. Capturing vsftpd logs..."
-          #   sudo cat /var/log/vsftpd.log
-          #   exit 1
-          # }
-          ftp -inv localhost <<EOF
-          user ftpuser ftppass
-          cd submit/Test
-          put testfile.txt
-          bye
-          EOF
+          curl -v --ipv4 -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+            echo "Upload failed. Capturing vsftpd logs..."
+            sudo cat /var/log/vsftpd.log
+            exit 1
+          }
           # Check if the file was uploaded successfully
           if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
             echo "Test file uploaded successfully!"
