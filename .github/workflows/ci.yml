@@ -102,7 +102,7 @@ jobs:
           # Upload the test file to the FTP server
           # This is failing with error: curl: (25) Failed FTP upload: 550
           # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          curl -v --ipv4 --ftp-port -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+          curl -v --ipv4 -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
             echo "Upload failed. Capturing vsftpd logs..."
             sudo cat /var/log/vsftpd.log
             exit 1
