@@ -69,7 +69,7 @@ jobs:
           sudo chown -R ftpuser:ftpuser /home/ftpuser
           sudo setfacl -b /home/ftpuser/submit/Test
           sudo chmod -R 777 /home/ftpuser/submit
-          cat /etc/vsftpd.conf
+
           echo "Opening ports 20, 21, and 10000-10010 for FTP"
           sudo iptables -A INPUT -p tcp --dport 21 -j ACCEPT
           sudo iptables -A INPUT -p tcp --dport 20 -j ACCEPT
@@ -86,7 +86,7 @@ jobs:
           getfacl /home/ftpuser/submit/Test
       - name: Start FTP server
         run: |
-          sudo service vsftpd start
+          sudo service vsftpd restart
           sleep 5  # Give server a moment to come up
       - name: Check FTP server status
         run: |
