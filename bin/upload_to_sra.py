@@ -39,22 +39,28 @@ def connect_and_login(username: str, password: str, server: str, remote_path: st
         exit(1)
 
     logger.info(f"Connected to {server} as {username}")
+    cwd = ftp.pwd()
+    logger.info(f"Current working directory: {cwd}")
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    remote_path = os.path.join(remote_path, f"{timestamp}-submission")
+    upload_dir = f"{timestamp}-submission"
+    ftp.cwd(remote_path)
+    logger.info(f"Changed directory to {remote_path}")
     try:
-        ftp.mkd(remote_path)
+        ftp.mkd(upload_dir)
     except ftplib.error_perm as e:
-        logger.error(f"Could not create directory {remote_path}")
+        logger.error(f"Could not create directory {upload_dir}")
+        exit(1)
     try:
-        ftp.cwd(remote_path)
+        ftp.cwd(upload_dir)
     except ftplib.error_perm as e:
-        logger.error(f"Could not change to directory {remote_path}")
+        logger.error(f"Could not change to directory {upload_dir}")
         exit(1)
     except IOError as e:
         logger.error(f"An error occurred: {e}")
         exit(1)
-    logger.info(f"Changed directory to {remote_path}")
+    logger.info(f"Changed directory to {remote_path}/{upload_dir}")
+    logger.info(f"Current working directory: {ftp.pwd()}")
 
     return ftp
 
