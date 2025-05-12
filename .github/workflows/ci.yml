@@ -56,6 +56,8 @@ jobs:
           log_ftp_protocol=YES
           xferlog_enable=YES
           xferlog_std_format=NO
+          user_sub_token=\$USER
+          local_root=/home/\$USER/submit
           EOF
 
           # Create FTP user and home dir
@@ -66,10 +68,12 @@ jobs:
           sudo chown -R ftpuser:ftpuser /home/ftpuser
           sudo setfacl -b /home/ftpuser/submit/Test
           sudo chmod -R 777 /home/ftpuser/submit
+          sudo ufw allow 10000:10010/tcp
       - name: Confirm permissions
         run: |
           ls -ld /home/ftpuser/submit/Test
           getfacl /home/ftpuser/submit/Test
+          sudo ufw status
       - name: Start FTP server
         run: |
           sudo service vsftpd start
