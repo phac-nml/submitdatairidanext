@@ -70,8 +70,16 @@ jobs:
           sudo setfacl -b /home/ftpuser/submit/Test
           sudo chmod -R 777 /home/ftpuser/submit
           cat /etc/vsftpd.conf
+          echo "Opening ports 20, 21, and 10000-10010 for FTP"
+          sudo iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+          sudo iptables -A INPUT -p tcp --dport 20 -j ACCEPT
+          # Open passive ports
           sudo iptables -A INPUT -p tcp --dport 10000:10010 -j ACCEPT
+          # Check if iptables rules are applied
+          echo "Checking iptables rules..."
           sudo iptables -L -n
+          echo "Check which process is using port 21"
+          sudo lsof -i :21
       - name: Confirm permissions
         run: |
           ls -ld /home/ftpuser/submit/Test
