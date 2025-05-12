@@ -63,7 +63,7 @@ jobs:
           sudo mkdir -p /home/ftpuser/submit/Test
           sudo chown -R ftpuser:ftpuser /home/ftpuser
           sudo setfacl -b /home/ftpuser/submit/Test
-          sudo chmod -R 775 /home/ftpuser/submit
+          sudo chmod -R 777 /home/ftpuser/submit
           sudo setfacl -R -m u:ftpuser:rwx /home/ftpuser/submit/Test
       - name: Confirm permissions
         run: |
