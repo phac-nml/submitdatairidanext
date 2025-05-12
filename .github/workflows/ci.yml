@@ -91,6 +91,8 @@ jobs:
           # Check if the FTP server is listening on port 21
           echo "Checking if FTP server is listening on port 21..."
           sudo netstat -tuln | grep ':21'
+          # Check if the FTP server is listening on passive ports
+          echo "Checking if FTP server is listening on passive ports..."
           sudo netstat -tuln | grep ':100'
           if ! sudo netstat -tuln | grep ':21' > /dev/null; then
             echo "FTP server is not listening on port 21!"
