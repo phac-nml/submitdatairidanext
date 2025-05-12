@@ -65,7 +65,7 @@ jobs:
       - name: Confirm permissions
         run: |
           ls -ld /home/ftpuser/submit/Test
-          ls -l /home/ftpuser/submit/Test
+          getfacl /home/ftpuser/submit/Test
       - name: Start FTP server
         run: |
           sudo service vsftpd start
