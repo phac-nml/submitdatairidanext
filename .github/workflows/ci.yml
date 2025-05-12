@@ -68,13 +68,11 @@ jobs:
           sudo chown -R ftpuser:ftpuser /home/ftpuser
           sudo setfacl -b /home/ftpuser/submit/Test
           sudo chmod -R 777 /home/ftpuser/submit
-          sudo ufw allow 10000:10010/tcp
           cat /etc/vsftpd.conf
       - name: Confirm permissions
         run: |
           ls -ld /home/ftpuser/submit/Test
           getfacl /home/ftpuser/submit/Test
-          sudo ufw status
       - name: Start FTP server
         run: |
           sudo service vsftpd start
