@@ -65,7 +65,37 @@ jobs:
         run: |
           sudo service vsftpd start
           sleep 5  # Give server a moment to come up
-
+      - name: Check FTP server status
+        run: |
+          sudo service vsftpd status
+          # Check if the FTP server is running
+          if ! pgrep -x "vsftpd" > /dev/null; then
+            echo "FTP server is not running!"
+            exit 1
+          fi
+          # Check if the FTP server is listening on port 21
+          if ! sudo netstat -tuln | grep ':21' > /dev/null; then
+            echo "FTP server is not listening on port 21!"
+            exit 1
+          fi
+          # Check if the FTP server is accessible
+          if ! curl -s --user ftpuser:ftppass ftp://localhost:21/ > /dev/null; then
+            echo "FTP server is not accessible!"
+            exit 1
+          fi
+          # Check if the FTP server can write to the home directory
+          if ! touch /home/ftpuser/submit/testfile.txt; then
+            echo "FTP server cannot write to the home directory!"
+            exit 1
+          fi
+          # Clean up test file
+          rm /home/ftpuser/submit/testfile.txt
+      - name: Upload test data
+        run: |
+          # Create a test file
+          echo "This is a test file." > testfile.txt
+          # Upload the test file to the FTP server
+          curl -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
