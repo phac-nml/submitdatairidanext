@@ -58,9 +58,10 @@ jobs:
           # Create FTP user and home dir
           sudo useradd -m ftpuser
           echo "ftpuser:ftppass" | sudo chpasswd
+          sudo chmod 755 /home/ftpuser
           sudo mkdir -p /home/ftpuser/submit/Test
-          sudo chown -R ftpuser:ftpuser /home/ftpuser/submit
-
+          sudo chown -R ftpuser:ftpuser /home/ftpuser
+          sudo chmod -R 755 /home/ftpuser/submit
       - name: Start FTP server
         run: |
           sudo service vsftpd start
