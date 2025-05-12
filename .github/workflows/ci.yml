@@ -43,6 +43,7 @@ jobs:
           # Write minimal config
           cat <<EOF | sudo tee /etc/vsftpd.conf
           listen=YES
+          listen_ipv6=NO
           anonymous_enable=YES
           write_enable=YES
           local_enable=YES
@@ -52,7 +53,7 @@ jobs:
           pasv_min_port=10000
           pasv_max_port=10010
           pasv_address=127.0.0.1
-          listen_ipv6=NO
+          log_ftp_protocol=YES
           EOF
 
           # Create FTP user and home dir
@@ -62,6 +63,7 @@ jobs:
           sudo mkdir -p /home/ftpuser/submit/Test
           sudo chown -R ftpuser:ftpuser /home/ftpuser
           sudo chmod -R 775 /home/ftpuser/submit
+          sudo setfacl -b /home/ftpuser/submit/Test
       - name: Confirm permissions
         run: |
           ls -ld /home/ftpuser/submit/Test
