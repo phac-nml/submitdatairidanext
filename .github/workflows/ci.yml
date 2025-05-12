@@ -47,8 +47,8 @@ jobs:
           anonymous_enable=YES
           write_enable=YES
           local_enable=YES
-          #chroot_local_user=YES
-          #allow_writeable_chroot=YES
+          chroot_local_user=YES
+          allow_writeable_chroot=YES
           pasv_enable=YES
           pasv_min_port=10000
           pasv_max_port=10010
@@ -102,7 +102,7 @@ jobs:
           # Upload the test file to the FTP server
           # This is failing with error: curl: (25) Failed FTP upload: 550
           # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          curl -v --ipv4 -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+          curl -v --ipv4 --ftp-port -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
             echo "Upload failed. Capturing vsftpd logs..."
             sudo cat /var/log/vsftpd.log
             exit 1
