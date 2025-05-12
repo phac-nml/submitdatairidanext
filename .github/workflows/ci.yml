@@ -97,7 +97,7 @@ jobs:
             exit 1
           fi
           echo "Checking if FTP server is listening on passive ports..."
-          sudo netstat -tuln | grep ':100'
+          sudo netstat -tuln | grep 100
           # Check if the FTP server is accessible
           echo "Checking if FTP server is accessible..."
           if ! curl -s --user ftpuser:ftppass ftp://localhost:21/ > /dev/null; then
