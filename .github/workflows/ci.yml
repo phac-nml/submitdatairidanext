@@ -58,7 +58,7 @@ jobs:
           xferlog_enable=YES
           xferlog_std_format=NO
           user_sub_token=\$USER
-          local_root=/home/\$USER/submit
+          local_root=/home/\$USER
           EOF
 
           # Create FTP user and home dir
