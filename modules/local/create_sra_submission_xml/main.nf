@@ -1,5 +1,4 @@
 process CREATE_SRA_SUBMISSION_XML {
-    tag "$meta.id"
     label 'process_single'
 
     // Container directive is intentionally using the "override_configure_container_registry" as an example:
@@ -10,11 +9,11 @@ process CREATE_SRA_SUBMISSION_XML {
     'python:3.10' }"
 
     input:
-    tuple val(meta), path(reads)
+    path(addfiles_xmls)
 
     output:
-    tuple val(meta), path("*_sra_submission.xml")  , emit: submission_xml
-    path "versions.yml"                            , emit: versions
+    path("submission.xml")  , emit: submission_xml
+    path "versions.yml"     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,11 +21,8 @@ process CREATE_SRA_SUBMISSION_XML {
     script:
     """
     create_sra_submission_xml.py \\
-        --study-accession ${params.bioproject_accession} \\
-        --library-name "" \\
-        --fastq1 ${reads[0]} \\
-        --fastq2 ${reads[1]} \\
-        --output ${meta.id}_sra_submission.xml
+        ./*_sra_addfiles.xml \\
+        --output submission.xml
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

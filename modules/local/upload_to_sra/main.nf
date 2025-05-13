@@ -1,5 +1,4 @@
 process UPLOAD_TO_SRA {
-    tag "$meta.id"
 
     // Container directive is intentionally using the "override_configure_container_registry" as an example:
     // How to keep a non-biocontainer/quay.io default, see nextflow.config for details
@@ -9,11 +8,11 @@ process UPLOAD_TO_SRA {
     'python:3.10' }"
 
     input:
-    tuple val(meta), path(reads), path(submission_xml)
+    tuple path(submission_xml), path(reads)
 
     output:
-    tuple val(meta), path("${meta.id}_sra_upload.log.txt")  , emit: sra_upload_log
-    path "versions.yml"                                     , emit: versions
+    path("sra_upload.log.txt")  , emit: sra_upload_log
+    path "versions.yml"         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,7 +27,7 @@ process UPLOAD_TO_SRA {
         --remote-path "${params.sra_ftp_base_dir}/${params.sra_submission_dir}" \\
         ${submission_xml} \\
         ${reads} \\
-        > ${meta.id}_sra_upload.log.txt
+        > sra_upload.log.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
