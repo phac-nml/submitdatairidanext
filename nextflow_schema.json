@@ -46,6 +46,25 @@
                     "default": "SRA",
                     "fa_icon": "fas fa-globe"
                 },
+                "sra_ftp_server": {
+                    "type": "string",
+                    "description": "FTP server for SRA submission.",
+                    "default": "ftp-private.ncbi.nlm.nih.gov",
+                    "fa_icon": "fas fa-server"
+                },
+                "sra_ftp_base_dir": {
+                    "type": "string",
+                    "description": "Remote directory on NCBI SRA FTP servers to deposit submission in. Defaults to `/submit`",
+                    "default": "/submit",
+                    "fa_icon": "fas fa-server"
+                },
+                "sra_submission_dir": {
+                    "type": "string",
+                    "description": "Remote subdirectory on NCBI SRA FTP servers to deposit submission in. Must be either `Production` or `Test`.",
+                    "enum": ["Production", "Test"],
+                    "default": "Production",
+                    "fa_icon": "fas fa-server"
+                },
                 "experiment_name": {
                     "type": "string",
                     "pattern": "^\\S+$",

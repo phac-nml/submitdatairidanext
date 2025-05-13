@@ -22,9 +22,10 @@ process UPLOAD_TO_SRA {
     """
 
     upload_to_sra.py \\
-        --ftp-user ${params.upload_username} \\
-        --ftp-password ${params.upload_password} \\
-        --remote-path "" \\
+        --ftp-server "${params.sra_ftp_server}" \\
+        --ftp-user "${params.upload_username}" \\
+        --ftp-password "${params.upload_password}" \\
+        --remote-path "${params.sra_ftp_base_dir}/${params.sra_submission_dir}" \\
         ${submission_xml} \\
         ${reads} \\
         > ${meta.id}_sra_upload.log.txt
