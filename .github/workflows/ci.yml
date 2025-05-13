@@ -40,7 +40,8 @@ jobs:
           # Backup original config
           sudo mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
 
-          # Write minimal config
+          # Write vsftpd config
+          echo "Creating vsftpd config:"
           cat <<EOF | sudo tee /etc/vsftpd.conf
           listen=NO
           listen_ipv6=YES
