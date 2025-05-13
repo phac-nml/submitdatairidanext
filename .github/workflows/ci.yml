@@ -114,6 +114,7 @@ jobs:
             exit 1
           fi
           echo "FTP server is running and accessible!"
+
       - name: Upload test data
         run: |
           # Create a test file
@@ -124,7 +125,7 @@ jobs:
             sudo cat /var/log/vsftpd.log
             exit 1
           }
-          
+
           # Check if the file was uploaded successfully
           if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
             echo "Test file uploaded successfully!"
@@ -166,4 +167,4 @@ jobs:
 
       - name: Nextflow run with test profile
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile  test,singularity --sra_ftp_server localhost --upload_username ftpuser --upload_password ftppass --sra_ftp_base_dir submit --sra_submission_dir Test --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --upload_username ftpuser --upload_password ftppass --sra_ftp_base_dir submit --sra_submission_dir Test --outdir ./results
