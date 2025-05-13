@@ -1,3 +1,4 @@
+include { CREATE_SRA_ADDFILES_XML}   from '../../../modules/local/create_sra_addfiles_xml'
 include { CREATE_SRA_SUBMISSION_XML} from '../../../modules/local/create_sra_submission_xml'
 include { UPLOAD_TO_SRA }            from '../../../modules/local/upload_to_sra'
 
@@ -8,12 +9,19 @@ workflow SUBMIT_TO_SRA {
     main:
     ch_versions = Channel.empty()
     sample_metadata = input.map{ meta, reads -> meta }
+    reads = input.map{ meta, reads -> reads }
 
-    CREATE_SRA_SUBMISSION_XML(input)
+    CREATE_SRA_ADDFILES_XML(input)
+    ch_versions = ch_versions.mix(CREATE_SRA_ADDFILES_XML.out.versions)
+
+    addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml.map{ meta, addfiles_xml -> addfiles_xml }.collect()
+    CREATE_SRA_SUBMISSION_XML(addfiles_xmls)
     ch_versions = ch_versions.mix(CREATE_SRA_SUBMISSION_XML.out.versions)
 
-    // Temorarily disable the upload process while further testing and development is done
-    UPLOAD_TO_SRA(input.join(CREATE_SRA_SUBMISSION_XML.out.submission_xml).view())
+    collected_reads = reads.collect()
+    submission_xml = CREATE_SRA_SUBMISSION_XML.out.submission_xml
+    submission_xml_with_collected_reads = submission_xml.combine(collected_reads).map { tuple(it[0], it[1..-1]) }
+    UPLOAD_TO_SRA(submission_xml_with_collected_reads)
     ch_versions = ch_versions.mix(UPLOAD_TO_SRA.out.versions)
 
     emit:
