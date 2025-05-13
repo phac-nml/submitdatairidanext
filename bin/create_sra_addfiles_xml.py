@@ -35,7 +35,7 @@ def convert_to_xml(submission_data: dict) -> ET.ElementTree:
     biosample_attribute_ref_id_container_element = ET.SubElement(biosample_attribute_ref_id_element, "RefId")
     biosample_primary_id_element = ET.SubElement(biosample_attribute_ref_id_container_element, "PrimaryId", {"db": "BioSample"})
     biosample_primary_id_element.text = submission_data['biosample_accession']
-    
+
     for fastq in submission_data['sequenced_library_attributes']["fastq_files"]:
         add_file_element = ET.SubElement(root, "File", {"file_path": fastq["filename"]})
         data_type_element = ET.SubElement(add_file_element, "DataType")
