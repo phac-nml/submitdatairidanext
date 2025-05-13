@@ -115,7 +115,7 @@ jobs:
           fi
           echo "FTP server is running and accessible!"
 
-      - name: Upload test data
+      - name: Perform Test FTP Upload
         run: |
           # Create a test file
           echo "This is a test file." > testfile.txt
