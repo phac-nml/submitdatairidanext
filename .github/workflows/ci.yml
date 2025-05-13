@@ -98,6 +98,7 @@ jobs:
             echo "FTP server is not running!"
             exit 1
           fi
+
           # Check if the FTP server is listening on port 21
           echo "Checking if FTP server is listening on port 21..."
           sudo netstat -tuln | grep ':21'
@@ -105,8 +106,7 @@ jobs:
             echo "FTP server is not listening on port 21!"
             exit 1
           fi
-          # echo "Checking if FTP server is listening on passive ports..."
-          # sudo netstat -tuln | grep 100
+
           # Check if the FTP server is accessible
           echo "Checking if FTP server is accessible..."
           if ! curl -s --user ftpuser:ftppass ftp://localhost:21/ > /dev/null; then
@@ -119,21 +119,27 @@ jobs:
           # Create a test file
           echo "This is a test file." > testfile.txt
           # Upload the test file to the FTP server
-          # This is failing with error: curl: (25) Failed FTP upload: 550
-          # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          # curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
-          #   echo "Upload failed. Capturing vsftpd logs..."
-          #   sudo cat /var/log/vsftpd.log
-          #   exit 1
-          # }
-          bin/upload_to_sra.py --ftp-server localhost --ftp-user ftpuser --ftp-password ftppass --remote-path submit/Test testfile.txt
+          curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+            echo "Upload failed. Capturing vsftpd logs..."
+            sudo cat /var/log/vsftpd.log
+            exit 1
+          }
+          
           # Check if the file was uploaded successfully
-          # if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
-          #   echo "Test file uploaded successfully!"
-          # else
-          #   echo "Failed to upload test file!"
-          #   exit 1
-          # fi
+          if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
+            echo "Test file uploaded successfully!"
+          else
+            echo "Failed to upload test file!"
+            exit 1
+          fi
+
+      - name: Install Apptainer
+        run: |
+          wget https://raw.githubusercontent.com/apptainer/apptainer/main/tools/install-unprivileged.sh && chmod +x install-unprivileged.sh
+          mkdir -p /opt/apptainer
+          ./install-unprivileged.sh /opt/apptainer
+          echo "/opt/apptainer/bin" >> $GITHUB_PATH
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
