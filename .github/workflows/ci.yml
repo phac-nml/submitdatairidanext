@@ -42,9 +42,10 @@ jobs:
 
           # Write minimal config
           cat <<EOF | sudo tee /etc/vsftpd.conf
-          listen=YES
-          listen_address=127.0.0.1
-          listen_ipv6=NO
+          listen=NO
+          listen_ipv6=YES
+          listen_port=21
+          listen_address=::1
           anonymous_enable=NO
           write_enable=YES
           local_enable=YES
@@ -53,7 +54,7 @@ jobs:
           pasv_enable=YES
           pasv_min_port=10000
           pasv_max_port=10010
-          pasv_address=127.0.0.1
+          pasv_address=::1
           log_ftp_protocol=YES
           xferlog_enable=YES
           xferlog_std_format=NO
@@ -120,7 +121,7 @@ jobs:
           # Upload the test file to the FTP server
           # This is failing with error: curl: (25) Failed FTP upload: 550
           # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          curl -v --ipv4 -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+          curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
             echo "Upload failed. Capturing vsftpd logs..."
             sudo cat /var/log/vsftpd.log
             exit 1
