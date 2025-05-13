@@ -121,11 +121,12 @@ jobs:
           # Upload the test file to the FTP server
           # This is failing with error: curl: (25) Failed FTP upload: 550
           # curl: (25) Failed FTP upload: 550 /home/ftpuser/submit/Test/testfile.txt: Permission denied
-          curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
-            echo "Upload failed. Capturing vsftpd logs..."
-            sudo cat /var/log/vsftpd.log
-            exit 1
-          }
+          # curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+          #   echo "Upload failed. Capturing vsftpd logs..."
+          #   sudo cat /var/log/vsftpd.log
+          #   exit 1
+          # }
+          bin/upload_to_sra.py --ftp-server localhost --ftp-user ftpuser --ftp-password ftppass --remote-path submit/Test testfile.txt
           # Check if the file was uploaded successfully
           if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
             echo "Test file uploaded successfully!"
