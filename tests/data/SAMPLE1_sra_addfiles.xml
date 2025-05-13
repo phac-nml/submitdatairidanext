@@ -1,0 +1,24 @@
+<AddFiles target_db="SRA">
+    <AttributeRefId name="BioProject">
+        <RefId>
+            <PrimaryId db="BioProject">null</PrimaryId>
+        </RefId>
+    </AttributeRefId>
+    <AttributeRefId name="BioSample">
+        <RefId>
+            <PrimaryId db="BioSample">null</PrimaryId>
+        </RefId>
+    </AttributeRefId>
+    <File file_path="sample1_R1.fastq.gz">
+        <DataType>generic-data</DataType>
+    </File>
+    <File file_path="sample1_R2.fastq.gz">
+        <DataType>generic-data</DataType>
+    </File>
+    <Attribute name="instrument_model">Illumina MiSeq</Attribute>
+    <Attribute name="library_name">SAMPLE1</Attribute>
+    <Attribute name="library_source">GENOMIC</Attribute>
+    <Attribute name="library_selection">RANDOM</Attribute>
+    <Attribute name="library_strategy">WGS</Attribute>
+    <Attribute name="library_layout">PAIRED</Attribute>
+</AddFiles>
