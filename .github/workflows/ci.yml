@@ -160,4 +160,4 @@ jobs:
 
       - name: Nextflow run with test profile
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --sra_ftp_server localhost --upload_username ftpuser --upload_password ftppass --sra_ftp_base_dir submit --sra_submission_dir Test --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --upload_username ftpuser --upload_password ftppass --sra_ftp_base_dir submit --sra_submission_dir Test --outdir ./results
