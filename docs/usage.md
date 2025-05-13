@@ -14,22 +14,23 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Full samplesheet
 
-The input samplesheet must contain three columns: `ID`, `fastq_1`, `fastq_2`. The IDs within a samplesheet should be unique. All other columns will be ignored.
+The input samplesheet must contain four columns: `sample`, `fastq_1`, `fastq_2`, `biosample_accesion`. The `sample` IDs within a samplesheet should be unique. All other columns will be ignored.
 
 A final samplesheet file consisting of both single- and paired-end data may look something like the one below.
 
 ```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-SAMPLE1,sample1_R1.fastq.gz,sample1_R2.fastq.gz
-SAMPLE2,sample2_R1.fastq.gz,sample2_R2.fastq.gz
-SAMPLE3,sample1_R1.fastq.gz,
+sample,fastq_1,fastq_2,biosample_accession
+SAMPLE1,sample1_R1.fastq.gz,sample1_R2.fastq.gz,SAMN12345678
+SAMPLE2,sample2_R1.fastq.gz,sample2_R2.fastq.gz,SAMN12345679
+SAMPLE3,sample3_R1.fastq.gz,,SAMN12345680
 ```
 
-| Column    | Description                                                                                                                |
-| --------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. Samples should be unique within a samplesheet.                                                         |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
+| Column                | Description                                                                                                                |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `sample`              | Custom sample name. Samples should be unique within a samplesheet.                                                         |
+| `fastq_1`             | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
+| `fastq_2`             | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
+| `biosample_accession` | A valid, pre-registered [BioSample](https://www.ncbi.nlm.nih.gov/biosample/) accession.                                    |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
