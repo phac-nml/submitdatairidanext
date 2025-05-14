@@ -32,14 +32,21 @@
                     }
                 ]
             },
+            "bioproject_accession": {
+                "type": "string",
+                "pattern": "^PRJNA\\d+$",
+                "description": "BioProject accession",
+                "meta": ["bioproject_accession"],
+                "errorMessage": "Provide a valid BioProject accession."
+            },
             "biosample_accession": {
                 "type": "string",
-                "pattern": "^SAMN\\d{8}$",
+                "pattern": "^SAMN\\d+$",
                 "description": "BioSample accession",
                 "meta": ["biosample_accession"],
                 "errorMessage": "Provide a valid BioSample accession."
             }
         },
-        "required": ["sample", "fastq_1", "biosample_accession"]
+        "required": ["sample", "fastq_1", "bioproject_accession", "biosample_accession"]
     }
 }

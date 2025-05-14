@@ -22,7 +22,7 @@ process CREATE_SRA_ADDFILES_XML {
     script:
     """
     create_sra_addfiles_xml.py \\
-        --bioproject-accession ${params.bioproject_accession} \\
+        --bioproject-accession ${meta.bioproject_accession} \\
         --biosample-accession ${meta.biosample_accession} \\
         --library-name ${meta.id} \\
         --fastq1 ${reads[0]} \\
