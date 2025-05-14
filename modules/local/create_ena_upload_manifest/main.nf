@@ -22,10 +22,10 @@ process CREATE_ENA_UPLOAD_MANIFEST {
     script:
     """
     create_ena_upload_manifest_json.py \\
-        --study-accession "" \\
-        --sample-accession "" \\
-        --experiment-name "" \\
-        --library-name "" \\
+        --study-accession ${meta.bioproject_accession} \\
+        --sample-accession ${meta.biosample_accession} \\
+        --experiment-name ${meta.id} \\
+        --library-name ${meta.id} \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\
         --output ${meta.id}_ena_upload_manifest.json
