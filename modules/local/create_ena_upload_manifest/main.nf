@@ -24,7 +24,7 @@ process CREATE_ENA_UPLOAD_MANIFEST {
     create_ena_upload_manifest_json.py \\
         --study-accession ${meta.bioproject_accession} \\
         --sample-accession ${meta.biosample_accession} \\
-        --experiment-name ${meta.id} \\
+        --experiment-name ${meta.bioproject_accession}-ILLUMINA-${meta.id} \\
         --library-name ${meta.id} \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\

@@ -12,8 +12,8 @@ workflow SUBMIT_TO_ENA {
     CREATE_ENA_UPLOAD_MANIFEST(input)
     ch_versions = ch_versions.mix(CREATE_ENA_UPLOAD_MANIFEST.out.versions)
 
-    //UPLOAD_TO_ENA(input.join(CREATE_ENA_UPLOAD_MANIFEST.out.upload_manifest))
-    //ch_versions = ch_versions.mix(UPLOAD_TO_ENA.out.versions)
+    UPLOAD_TO_ENA(input.join(CREATE_ENA_UPLOAD_MANIFEST.out.upload_manifest))
+    ch_versions = ch_versions.mix(UPLOAD_TO_ENA.out.versions)
 
     emit:
     versions = ch_versions                          // channel: [ process_1_versions.yml, process_2_versions.yml, ... ]
