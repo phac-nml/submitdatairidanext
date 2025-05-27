@@ -52,7 +52,6 @@ def main(args):
     sample_upload_manifest = {
         "study": args.study_accession,
         "sample": args.sample_accession,
-        "name": args.experiment_name,
         "platform": args.sequencing_platform.upper(),
         "instrument": sequencing_instrument,
         "library_name": args.library_name,
@@ -61,16 +60,24 @@ def main(args):
         "library_strategy": args.library_strategy.upper(),
         "fastq": [],
     }
+
+    if args.experiment_name:
+        sample_upload_manifest["name"] = args.experiment_name
+
     read_type = "paired" if args.fastq2 else "single"
     fastq_1 = {
-        "filename": args.fastq1.name,
-        "read_type": read_type,
+        "value": args.fastq1.name,
+        "attributes": {
+            "read_type": read_type,
+        },
     }
     sample_upload_manifest["fastq"].append(fastq_1)
     if args.fastq2:
         fastq_2 = {
-            "filename": args.fastq2.name,
-            "read_type": read_type,
+            "value": args.fastq2.name,
+            "attributes": {
+                "read_type": read_type,
+            },
         }
         sample_upload_manifest["fastq"].append(fastq_2)
     if args.output:
