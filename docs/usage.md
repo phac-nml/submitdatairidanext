@@ -14,7 +14,7 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Full samplesheet
 
-The input samplesheet must contain four columns: `sample`, `fastq_1`, `bioproject_accession`, `biosample_accesion`.
+The input samplesheet must contain four columns: `sample`, `fastq_1`, `bioproject_accession`, `biosample_accession`.
 For paired-end sequence data, a second fastq column `fastq_2` must be included.
 The `sample` IDs within a samplesheet should be unique. All other columns will be ignored.
 
