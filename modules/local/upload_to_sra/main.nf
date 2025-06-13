@@ -18,14 +18,14 @@ process UPLOAD_TO_SRA {
     task.ext.when == null || task.ext.when
 
     script:
-    sra_submission_dir = params.test_upload ? "Test" : "Prouction"
+    sra_submission_dir = params.test_upload ? "Test" : "Production"
     """
 
     upload_to_sra.py \\
         --ftp-server "${params.sra_ftp_server}" \\
         --ftp-user "${params.upload_username}" \\
         --ftp-password "${params.upload_password}" \\
-        --remote-path "/submit/${sra_submission_dir}" \\
+        --remote-path "submit/${sra_submission_dir}" \\
         ${submission_xml} \\
         ${reads} \\
         > sra_upload.log.txt
