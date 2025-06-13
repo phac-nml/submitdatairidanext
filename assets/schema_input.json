@@ -34,7 +34,7 @@
             },
             "bioproject_accession": {
                 "type": "string",
-                "pattern": "^PRJNA\\d+$",
+                "pattern": "^PRJ[A-Z]{2}\\d+$",
                 "description": "BioProject accession",
                 "meta": ["bioproject_accession"],
                 "errorMessage": "Provide a valid BioProject accession."
