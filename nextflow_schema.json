@@ -52,18 +52,12 @@
                     "default": "ftp-private.ncbi.nlm.nih.gov",
                     "fa_icon": "fas fa-server"
                 },
-                "sra_ftp_base_dir": {
-                    "type": "string",
-                    "description": "Remote directory on NCBI SRA FTP servers to deposit submission in. Defaults to `/submit`",
-                    "default": "/submit",
-                    "fa_icon": "fas fa-server"
-                },
-                "sra_submission_dir": {
-                    "type": "string",
-                    "description": "Remote subdirectory on NCBI SRA FTP servers to deposit submission in. Must be either `Production` or `Test`.",
-                    "enum": ["Production", "Test"],
-                    "default": "Production",
-                    "fa_icon": "fas fa-server"
+                "test_upload": {
+                    "type": "boolean",
+                    "description": "Submit a test upload.",
+                    "default": "false",
+                    "fa_icon": "fas fa-bug",
+                    "help_text": "If set to `true`, the pipeline will submit a test upload to the SRA or ENA server."
                 },
                 "email": {
                     "type": "string",
