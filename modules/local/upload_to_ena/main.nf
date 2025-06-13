@@ -17,6 +17,7 @@ process UPLOAD_TO_ENA {
     task.ext.when == null || task.ext.when
 
     script:
+    test_flag = params.test_upload ? "-test" : ""
     """
     # Temporarily only performing validation here
     # So we can test/develop without performing any actual uploads.
@@ -28,6 +29,7 @@ process UPLOAD_TO_ENA {
         -manifest ${upload_manifest} \\
         -inputDir . \\
         -validate \\
+        ${test_flag} \\
         > ${meta.id}_webin_validation_result.txt
 
     cat <<-END_VERSIONS > versions.yml
