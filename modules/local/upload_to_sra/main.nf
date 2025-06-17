@@ -12,6 +12,7 @@ process UPLOAD_TO_SRA {
 
     output:
     path("sra_upload.log.txt")  , emit: sra_upload_log
+    path("upload_metadata.csv") , emit: upload_metadata
     path "versions.yml"         , emit: versions
 
     when:
@@ -26,9 +27,9 @@ process UPLOAD_TO_SRA {
         --ftp-user "${params.upload_username}" \\
         --ftp-password "${params.upload_password}" \\
         --remote-path "submit/${sra_submission_dir}" \\
-        ${submission_xml} \\
-        ${reads} \\
-        > sra_upload.log.txt
+        --submission-xml ${submission_xml} \\
+        --reads ${reads} \\
+        2> >(tee -a sra_upload.log.txt >&2)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
