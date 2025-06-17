@@ -11,7 +11,7 @@ process UPLOAD_TO_SRA {
     tuple path(submission_xml), path(reads)
 
     output:
-    path("sra_upload.log.txt")  , emit: sra_upload_log
+    path("sra_upload.log.txt")  , emit: upload_log
     path("upload_metadata.csv") , emit: upload_metadata
     path "versions.yml"         , emit: versions
 

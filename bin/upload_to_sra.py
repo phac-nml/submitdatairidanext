@@ -20,14 +20,14 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def parse_submission_xml(submission_xml_path: Path) -> ET.ElementTree:
+def parse_submission_xml(submission_xml_path: Path) -> list[dict]:
     """
     Parse a submission XML file and return.
 
     :param submission_xml_path: Path to the submission XML file
     :type submission_xml_path: Path
-    :return: 
-    :rtype: 
+    :return: List of libraries with their metadata extracted from the submission XML
+    :rtype: list[dict]
     """
     tree = None
     libraries = []
@@ -138,8 +138,7 @@ def main(args):
     ftp_conn = connect_and_login(args.ftp_user, args.ftp_password, args.ftp_server, args.remote_path)
 
     parsed_submission_xml = parse_submission_xml(args.submission_xml)
-    print(json.dumps(parsed_submission_xml, indent=2))
-    #exit()
+
     files_to_upload = [args.submission_xml] + args.reads
     if not all(file.exists() for file in files_to_upload):
         logger.error("One or more files do not exist. Please check the paths.")
@@ -157,7 +156,7 @@ def main(args):
             "sra_upload_status": "PENDING",
             "timestamp_sra_upload_start": timestamp_upload_start,
             "timestamp_sra_upload_complete": None,
-        }  
+        }
         upload_metadata_by_library_name[library_name] = library_metadata
 
     for file_path in files_to_upload:
@@ -177,10 +176,10 @@ def main(args):
     # Write upload metadata to a CSV file
     upload_metadata_path = args.upload_metadata
     upload_metadata_fieldnames = [
-        "library_name", 
-        "sra_upload_status", 
-        "timestamp_sra_upload_start", 
-        "timestamp_sra_upload_complete"
+        "library_name",
+        "sra_upload_status",
+        "timestamp_sra_upload_start",
+        "timestamp_sra_upload_complete",
     ]
     with open(upload_metadata_path, 'w') as f:
         writer = csv.DictWriter(f, fieldnames=upload_metadata_fieldnames)

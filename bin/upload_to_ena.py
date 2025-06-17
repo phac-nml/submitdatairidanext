@@ -38,7 +38,7 @@ def parse_multi_upload_manifest(manifest_path: Path) -> dict:
         with open(manifest_path, 'r') as f:
             manifest_data = json.load(f)
             logger.info(f"Parsed multi-upload manifest: {manifest_path}")
-           
+
     except json.JSONDecodeError as e:
         logger.error(f"Error parsing {manifest_path}: {e}")
         sys.exit(-1)
@@ -73,7 +73,7 @@ def main(args):
             except OSError as e:
                 logger.error(f"Error creating symlink for {fastq_file_path}: {e}")
                 sys.exit(-1)
-            
+
         upload_manifest_path = Path("upload_manifest.json")
         with open(upload_manifest_path, 'w') as f:
             try:
@@ -87,7 +87,7 @@ def main(args):
         # Temporarily only performing validation here
         # So we can test/develop without performing any actual uploads.
         upload_command = [
-            "ena-webin-cli", 
+            "ena-webin-cli",
             "-context", "reads",
             "-userName", args.upload_username,
             "-password", args.upload_password,

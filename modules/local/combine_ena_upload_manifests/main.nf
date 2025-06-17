@@ -23,7 +23,6 @@ process COMBINE_ENA_UPLOAD_MANIFESTS {
     combine_ena_upload_manifests.py \\
         ./*_ena_upload_manifest.json \\
         --output multi_upload_manifest.json
-        
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

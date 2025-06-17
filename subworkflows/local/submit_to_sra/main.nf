@@ -8,8 +8,8 @@ workflow SUBMIT_TO_SRA {
 
     main:
     ch_versions = Channel.empty()
-    sample_metadata = input.map{ meta, reads -> meta }
-    reads = input.map{ meta, reads -> reads }
+    sample_metadata = input.map{ meta, _reads -> meta }
+    reads = input.map{ _meta, reads -> reads }
 
     CREATE_SRA_ADDFILES_XML(input)
     ch_versions = ch_versions.mix(CREATE_SRA_ADDFILES_XML.out.versions)
