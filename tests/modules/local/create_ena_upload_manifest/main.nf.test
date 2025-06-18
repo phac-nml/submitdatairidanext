@@ -19,8 +19,17 @@ nextflow_process {
 
         then {
             assert process.success
+            with(process.out) {
+                // parse output json file
+                def json_string = path(upload_manifest.get(0)[1]).getText()
+                def parser = new groovy.json.JsonSlurper()
+                def json_manifest = parser.parseText(json_string)
+                assert json_manifest.study == "PRJNA123456"
+                assert json_manifest.sample == "SAMN12345678"
+                assert json_manifest.library_name == "SAMPLE1"
+                assert json_manifest.fastq[0].value == "SAMPLE1_R1.fastq.gz"
+                assert json_manifest.fastq[1].value == "SAMPLE1_R2.fastq.gz"
+            }
         }
-
     }
-
 }
