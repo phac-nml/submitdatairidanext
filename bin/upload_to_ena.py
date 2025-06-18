@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 """
-Uploads files to an FTP server
+Uploads files to an ENA using the ena-webin-cli tool.
 """
 
 import argparse
 import csv
 import datetime
-import ftplib
 import json
 import logging
 import os
