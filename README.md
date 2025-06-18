@@ -15,7 +15,7 @@ This pipeline is currently in early stage development. Several aspects of core f
 
 The input to the pipeline is a standard sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | fastq_1         | fastq_2         | bioproject_accession | biosample_accession | 
+| sample  | fastq_1         | fastq_2         | bioproject_accession | biosample_accession |
 | ------- | --------------- | --------------- | -------------------: | ------------------: |
 | SampleA | file_1.fastq.gz | file_2.fastq.gz |          PRJNA123456 |        SAMN12345678 |
 
@@ -46,42 +46,42 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
 
 ```json
 {
-    "files": {
-        "global": [
-            {
-                "path": "upload_to_sra/sra_upload.log.txt"
-            },
-            {
-                "path": "create_sra_submission_xml/submission.xml"
-            }
-        ],
-        "samples": {
-            "SAMPLE2": [
-                {
-                    "path": "create_sra_addfiles_xml/SAMPLE2_sra_addfiles.xml"
-                }
-            ],
-            "SAMPLE1": [
-                {
-                    "path": "create_sra_addfiles_xml/SAMPLE1_sra_addfiles.xml"
-                }
-            ]
+  "files": {
+    "global": [
+      {
+        "path": "upload_to_sra/sra_upload.log.txt"
+      },
+      {
+        "path": "create_sra_submission_xml/submission.xml"
+      }
+    ],
+    "samples": {
+      "SAMPLE2": [
+        {
+          "path": "create_sra_addfiles_xml/SAMPLE2_sra_addfiles.xml"
         }
-    },
-    "metadata": {
-        "samples": {
-            "SAMPLE1": {
-                "sra_upload_status": "COMPLETED",
-                "timestamp_sra_upload_start": "2025-06-18T19:41:14Z",
-                "timestamp_sra_upload_complete": "2025-06-18T19:41:14Z"
-            },
-            "SAMPLE2": {
-                "sra_upload_status": "COMPLETED",
-                "timestamp_sra_upload_start": "2025-06-18T19:41:14Z",
-                "timestamp_sra_upload_complete": "2025-06-18T19:41:14Z"
-            }
+      ],
+      "SAMPLE1": [
+        {
+          "path": "create_sra_addfiles_xml/SAMPLE1_sra_addfiles.xml"
         }
+      ]
     }
+  },
+  "metadata": {
+    "samples": {
+      "SAMPLE1": {
+        "sra_upload_status": "COMPLETED",
+        "timestamp_sra_upload_start": "2025-06-18T19:41:14Z",
+        "timestamp_sra_upload_complete": "2025-06-18T19:41:14Z"
+      },
+      "SAMPLE2": {
+        "sra_upload_status": "COMPLETED",
+        "timestamp_sra_upload_start": "2025-06-18T19:41:14Z",
+        "timestamp_sra_upload_complete": "2025-06-18T19:41:14Z"
+      }
+    }
+  }
 }
 ```
 
