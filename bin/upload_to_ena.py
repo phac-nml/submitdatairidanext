@@ -54,6 +54,17 @@ def main(args):
         logger.error("No valid upload manifest data found.")
         sys.exit(-1)
 
+
+    upload_metadata_by_library_name = {}
+    for library_name, upload_manifest in upload_manifest_by_library_name.items():
+        upload_metadata = {
+            "library_name": library_name,
+            "ena_upload_status": "PENDING",
+            "timestamp_ena_upload_start": None,
+            "timestamp_ena_upload_end": None,
+        }
+        upload_metadata_by_library_name[library_name] = upload_metadata
+
     for library_name, upload_manifest in upload_manifest_by_library_name.items():
         logger.info(f"Processing library: {library_name}")
         upload_dir_name = f"{library_name}_upload"
@@ -98,14 +109,31 @@ def main(args):
         ]
 
         # Execute the upload command
+        timestamp_upload_start = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        upload_metadata_by_library_name[library_name]["timestamp_ena_upload_start"] = timestamp_upload_start
         try:
             subprocess.run(upload_command, check=True)
             logger.info(f"Successfully uploaded files for library: {library_name}")
+            timestamp_upload_end = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+            upload_metadata_by_library_name[library_name]["ena_upload_status"] = "COMPLETED"
+            upload_metadata_by_library_name[library_name]["timestamp_ena_upload_end"] = timestamp_upload_end
         except subprocess.CalledProcessError as e:
             logger.error(f"Failed to upload files for library {library_name}: {e}")
-            sys.exit(-1)
+            upload_metadata_by_library_name[library_name]["ena_upload_status"] = "FAILED"
+        except Exception as e:
+            logger.error(f"An unexpected error occurred while uploading files for library {library_name}: {e}")
+            upload_metadata_by_library_name[library_name]["ena_upload_status"] = "FAILED"
 
         os.chdir('..')
+
+    upload_metadata_path = Path(args.upload_metadata)
+    with open(upload_metadata_path, 'w', newline='') as csvfile:
+        fieldnames = ["library_name", "ena_upload_status", "timestamp_ena_upload_start", "timestamp_ena_upload_end"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for library_name, upload_metadata in upload_metadata_by_library_name.items():
+            writer.writerow(upload_metadata)
+    logger.info(f"Upload metadata written to {upload_metadata_path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Upload files to ENA using webin-cli')
