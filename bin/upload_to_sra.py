@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Uploads files to an FTP server
+Uploads files to the SRA using FTP.
 """
 
 import argparse

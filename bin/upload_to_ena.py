@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Uploads files to an ENA using the ena-webin-cli tool.
+Uploads files to the ENA using the ena-webin-cli tool.
 """
 
 import argparse
