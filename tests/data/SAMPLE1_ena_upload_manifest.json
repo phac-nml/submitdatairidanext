@@ -1,0 +1,25 @@
+{
+    "study": "PRJNA123456",
+    "sample": "SAMN12345678",
+    "platform": "ILLUMINA",
+    "instrument": "Illumina MiSeq",
+    "library_name": "SAMPLE1",
+    "library_source": "GENOMIC",
+    "library_selection": "RANDOM",
+    "library_strategy": "WGS",
+    "fastq": [
+        {
+            "value": "SAMPLE1_R1.fastq.gz",
+            "attributes": {
+                "read_type": "paired"
+            }
+        },
+        {
+            "value": "SAMPLE1_R2.fastq.gz",
+            "attributes": {
+                "read_type": "paired"
+            }
+        }
+    ],
+    "name": "PRJNA123456-ILLUMINA-SAMPLE1"
+}
