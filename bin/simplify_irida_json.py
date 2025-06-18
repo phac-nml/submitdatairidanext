@@ -67,6 +67,7 @@ def main():
     json_data = json.dumps(input_json, sort_keys=True, indent=4)
     with open(json_output_location, "w") as output_file:
         output_file.write(json_data)
+        output_file.write("\n")
 
     print("Output written to " + str(json_output_location) + "!")
 

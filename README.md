@@ -15,9 +15,9 @@ This pipeline is currently in early stage development. Several aspects of core f
 
 The input to the pipeline is a standard sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | fastq_1         | fastq_2         | taxon_id | collection_date | country |
-| ------- | --------------- | --------------- | -------: | --------------: | ------- |
-| SampleA | file_1.fastq.gz | file_2.fastq.gz |      562 |            2025 | Canada  |
+| sample  | fastq_1         | fastq_2         | bioproject_accession | biosample_accession | 
+| ------- | --------------- | --------------- | -------------------: | ------------------: |
+| SampleA | file_1.fastq.gz | file_2.fastq.gz |          PRJNA123456 |        SAMN12345678 |
 
 The structure of this file is defined in [assets/schema_input.json](assets/schema_input.json). Validation of the sample sheet is performed by [nf-validation](https://nextflow-io.github.io/nf-validation/).
 
@@ -44,28 +44,26 @@ A JSON file for loading metadata into IRIDA Next is output by this pipeline. The
 
 An example of the what the contents of the IRIDA Next JSON file looks like for this particular pipeline is as follows:
 
-```
+```json
 {
     "files": {
         "global": [
             {
-                "path": "summary/summary.txt.gz"
+                "path": "upload_to_sra/sra_upload.log.txt"
+            },
+            {
+                "path": "create_sra_submission_xml/submission.xml"
             }
         ],
         "samples": {
-            "SAMPLE1": [
-                {
-                    "path": "assembly/SAMPLE1.assembly.fa.gz"
-                }
-            ],
             "SAMPLE2": [
                 {
-                    "path": "assembly/SAMPLE2.assembly.fa.gz"
+                    "path": "create_sra_addfiles_xml/SAMPLE2_sra_addfiles.xml"
                 }
             ],
-            "SAMPLE3": [
+            "SAMPLE1": [
                 {
-                    "path": "assembly/SAMPLE3.assembly.fa.gz"
+                    "path": "create_sra_addfiles_xml/SAMPLE1_sra_addfiles.xml"
                 }
             ]
         }
@@ -73,25 +71,21 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
     "metadata": {
         "samples": {
             "SAMPLE1": {
-                "reads.1": "sample1_R1.fastq.gz",
-                "reads.2": "sample1_R2.fastq.gz"
+                "sra_upload_status": "COMPLETED",
+                "timestamp_sra_upload_start": "2025-06-18T19:41:14Z",
+                "timestamp_sra_upload_complete": "2025-06-18T19:41:14Z"
             },
             "SAMPLE2": {
-                "reads.1": "sample2_R1.fastq.gz",
-                "reads.2": "sample2_R2.fastq.gz"
-            },
-            "SAMPLE3": {
-                "reads.1": "sample1_R1.fastq.gz",
-                "reads.2": "null"
+                "sra_upload_status": "COMPLETED",
+                "timestamp_sra_upload_start": "2025-06-18T19:41:14Z",
+                "timestamp_sra_upload_complete": "2025-06-18T19:41:14Z"
             }
         }
     }
 }
 ```
 
-Within the `files` section of this JSON file, all of the output paths are relative to the `outdir`. Therefore, `"path": "assembly/SAMPLE1.assembly.fa.gz"` refers to a file located within `outdir/assembly/SAMPLE1.assembly.fa.gz`.
-
-There is also a pipeline execution summary output file provided (specified in the above JSON as `"global": [{"path":"summary/summary.txt.gz"}]`). However, there is no formatting specification for this file.
+Within the `files` section of this JSON file, all of the output paths are relative to the `outdir`. Therefore, `"path": "create_sra_submission_xml/submission.xml"` refers to a file located within `outdir/create_sra_submission_xml/submission.xml`.
 
 For more information see [output doc](docs/output.md)
 
