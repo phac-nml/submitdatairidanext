@@ -16,56 +16,95 @@ The IRIDA Next-compliant JSON output file will be named `iridanext.output.json.g
 
 ## Pipeline overview
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
+The pipeline includes two subworkflows, one for submitting to [SRA](https://www.ncbi.nlm.nih.gov/sra) and one for submitting to [ENA](https://www.ebi.ac.uk/ena).
 
-- [Assembly stub](#assembly-stub) - Performs a stub assembly by generating a mock assembly
-- [Generate sample JSON](#generate-sample-json) - Generates a JSON file for each sample
-- [Generate summary](#generate-summary) - Generates a summary text file describing the samples and assemblies
+### Submit to SRA
+
+- [Create SRA AddFiles XML](#create-sra-addfiles-xml) - Creates the `<AddFiles>` section of the SRA `submission.xml` file for each sample
+- [Create SRA Submission XML](#create-sra-submission-xml) - Creates the complete `submission.xml` file by combining the AddFiles XML for each sample.
+- [Upload to SRA](#upload-to-sra) - Uploads reads and `submission.xml` file to the SRA using FTP.
+
+### Submit to ENA
+
+- [Create ENA Upload Manifest](#create-ena-upload-manifest) - Creates an ENA `upload_manifest.json` file for each sample
+- [Combine ENA Upload Manifests](#combine-ena-upload-manifests) - Combines all `upload_manifest.json` files into a single file to facilitate uploading multiple samples from one process.
+- [Upload to ENA](#upload-to-ena) - Uploads reads and `upload_manifest.json` files to the ENA using the `ena-webin-cli` tool.
+
+### Common
+
 - [Simplify IRIDA JSON](#simplify-irida-json) - Simplifies the sample JSONs by limiting nesting depth
 - [IRIDA Next Output](#irida-next-output) - Generates a JSON output file that is compliant with IRIDA Next
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-### Assembly stub
+### Submit to SRA
+
+#### Create SRA Addfiles XML
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `assembly/`
-  - Mock assembly files: `ID.assembly.fa.gz`
+- `create_sra_addfiles_xml/`
+  - AddFiles XML: `ID_sra_addfiles.xml`
 
 </details>
 
-### Generate sample JSON
+#### Create SRA Submission XML
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `generate/`
-  - JSON files: `ID.json.gz`
+- `create_sra_submission_xml/`
+  - Submission XML: `submission.xml`
 
 </details>
 
-### Generate summary
+#### Upload to SRA
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `summary/`
-  - Text summary describing samples and assemblies: `summary.txt.gz`
+- `upload_to_sra/`
+  - Upload Log: `sra_upload_log.txt`
+  - Upload Metadata: `upload_metadata.csv`
 
 </details>
 
-### Simplify IRIDA JSON
+### Submit to ENA
+
+#### Create ENA Upload Manifest
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `simplify/`
-  - Simplified JSON files: `ID.simple.json.gz`
+- `create_ena_upload_manifest/`
+  - Upload Manifest JSON: `ID_ena_upload_manifest.json`
 
 </details>
 
-### IRIDA Next Output
+#### Combine ENA Upload Manifests
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `combine_ena_upload_manifests/`
+  - Multi-Upload Manifest JSON: `multi_upload_manifest.json`
+
+</details>
+
+#### Upload to ENA
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `upload_to_ena/`
+  - Upload Log: `ena_upload_log.txt`
+  - Upload Metadata: `upload_metadata.csv`
+
+</details>
+
+### Common
+
+#### IRIDA Next Output
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -75,7 +114,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-### Pipeline information
+#### Pipeline information
 
 <details markdown="1">
 <summary>Output files</summary>

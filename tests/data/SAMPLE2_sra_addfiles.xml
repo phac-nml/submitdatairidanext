@@ -6,17 +6,17 @@
     </AttributeRefId>
     <AttributeRefId name="BioSample">
         <RefId>
-            <PrimaryId db="BioSample">SAMN12345678</PrimaryId>
+            <PrimaryId db="BioSample">SAMN12345679</PrimaryId>
         </RefId>
     </AttributeRefId>
-    <File file_path="SAMPLE1_R1.fastq.gz">
+    <File file_path="SAMPLE2_R1.fastq.gz">
         <DataType>generic-data</DataType>
     </File>
-    <File file_path="SAMPLE1_R2.fastq.gz">
+    <File file_path="SAMPLE2_R2.fastq.gz">
         <DataType>generic-data</DataType>
     </File>
     <Attribute name="instrument_model">Illumina MiSeq</Attribute>
-    <Attribute name="library_name">SAMPLE1</Attribute>
+    <Attribute name="library_name">SAMPLE2</Attribute>
     <Attribute name="library_source">GENOMIC</Attribute>
     <Attribute name="library_selection">RANDOM</Attribute>
     <Attribute name="library_strategy">WGS</Attribute>
