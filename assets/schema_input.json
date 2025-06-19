@@ -153,6 +153,65 @@
                 "meta": ["library_strategy"],
                 "default": "WGS",
                 "errorMessage": "Library strategy must be one of: WGS, WES, RNA-Seq, or other"
+            },
+            "platform": {
+                "type": "string",
+                "enum": [
+                    "ILLUMINA",
+                    "PACBIO_SMRT",
+                    "ION_TORRENT",
+                    "OXFORD_NANOPORE",
+                    "SOLID",
+                    "OTHER"
+                ],
+                "description": "Sequencing platform used for the library",
+                "meta": ["platform"],
+                "default": "ILLUMINA",
+                "errorMessage": "Platform must be one of: ILLUMINA, PACBIO_SMRT, ION_TORRENT, OXFORD_NANOPORE, SOLID, or OTHER"
+            },
+            "instrument_model": {
+                "type": "string",
+                "enum": [
+                    "HiSeq X Five",
+                    "HiSeq X Ten",
+                    "Illumina Genome Analyzer",
+                    "Illumina Genome Analyzer II",
+                    "Illumina Genome Analyzer IIx",
+                    "Illumina HiScanSQ",
+                    "Illumina HiSeq 1000",
+                    "Illumina HiSeq 1500",
+                    "Illumina HiSeq 2000",
+                    "Illumina HiSeq 2500",
+                    "Illumina HiSeq 3000",
+                    "Illumina HiSeq 4000",
+                    "Illumina HiSeq X",
+                    "Illumina iSeq 100",
+                    "Illumina MiSeq",
+                    "Illumina MiniSeq",
+                    "Illumina NovaSeq X",
+                    "Illumina NovaSeq X Plus",
+                    "Illumina NovaSeq 6000",
+                    "NextSeq 500",
+                    "NextSeq 550",
+                    "NextSeq 1000",
+                    "NextSeq 2000",
+                    "MinION",
+                    "GridION",
+                    "PromethION",
+                    "Onso",
+                    "PacBio RS",
+                    "PacBio RS II",
+                    "Revio",
+                    "Sequel",
+                    "Sequel II",
+                    "Sequel IIe",
+                    "Vega",
+                    "unspecified"
+                ],
+                "description": "Model of sequencing instrument used for the library",
+                "meta": ["instrument_model"],
+                "default": "Illumina MiSeq",
+                "errorMessage": "Sequencing instrument model must be one of: HiSeq X Five, HiSeq X Ten, Illumina Genome Analyzer, Illumina Genome Analyzer II, Illumina Genome Analyzer IIx, Illumina HiScanSQ, Illumina HiSeq 1000, Illumina HiSeq 1500, Illumina HiSeq 2000, Illumina HiSeq 2500, Illumina HiSeq 3000, Illumina HiSeq 4000, Illumina HiSeq X, Illumina iSeq 100, Illumina MiSeq, Illumina MiniSeq, Illumina NovaSeq X, Illumina NovaSeq X Plus, Illumina NovaSeq 6000, NextSeq 500, NextSeq 550, NextSeq 1000, NextSeq 2000, MinION, GridION, PromethION, Onso, PacBio RS, PacBio RS II, Revio, Sequel, Sequel II, Sequel IIe or Vega"
             }
         },
         "required": [
@@ -162,7 +221,9 @@
             "biosample_accession",
             "library_source",
             "library_selection",
-            "library_strategy"
+            "library_strategy",
+            "platform",
+            "instrument_model"
         ]
     }
 }

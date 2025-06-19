@@ -12,26 +12,11 @@ def main(args):
     if args.fastq2 == 'null':
         args.fastq2 = None
 
-    instrument_lookup = {
-        "miseq": "Illumina MiSeq",
-        "hiseq": "Illumina HiSeq",
-        "nextseq": "Illumina NextSeq",
-        "novaseq": "Illumina NovaSeq",
-        "pacbio": "PacBio Sequel II",
-        "sanger": "Sanger Sequencing"
-    }
-
-    if args.sequencing_instrument.lower() not in instrument_lookup:
-        print(f"Invalid sequencing instrument: {args.sequencing_instrument}", file=sys.stderr)
-        sys.exit(1)
-
-    sequencing_instrument = instrument_lookup[args.sequencing_instrument.lower()]
-
     sample_upload_manifest = {
         "study": args.study_accession,
         "sample": args.sample_accession,
-        "platform": args.sequencing_platform,
-        "instrument": sequencing_instrument,
+        "platform": args.platform,
+        "instrument": args.instrument_model,
         "library_name": args.library_name,
         "library_source": args.library_source,
         "library_selection": args.library_selection,
@@ -69,9 +54,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--study-accession', type=str, help="Registered Study Accession")
     parser.add_argument('--sample-accession', type=str, help="Registered Sample Accession")
-    parser.add_argument('--sequencing-platform', type=str, default="ILLUMINA", help="Sequencing platform (default: 'ILLUMINA')")
+    parser.add_argument('--platform', type=str, default="ILLUMINA", help="Sequencing platform (default: 'ILLUMINA')")
     parser.add_argument('--experiment-name', type=str, help="Experiment Name")
-    parser.add_argument('--sequencing-instrument', type=str, default="MISEQ", help="Sequencing platform (default: 'MISEQ')")
+    parser.add_argument('--instrument-model', type=str, default="Illumina MiSeq", help="Sequencing platform (default: 'Illumina MiSeq')")
     parser.add_argument('--library-name', type=str, help="Library Name")
     parser.add_argument('--library-source', type=str, default="GENOMIC", help="Library Source (default: 'GENOMIC')")
     parser.add_argument('--library-selection', type=str, default="RANDOM", help="Library Selection (default: 'RANDOM')")
