@@ -15,9 +15,9 @@ This pipeline is currently in early stage development. Several aspects of core f
 
 The input to the pipeline is a standard sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | fastq_1         | fastq_2         | bioproject_accession | biosample_accession |
-| ------- | --------------- | --------------- | -------------------: | ------------------: |
-| SampleA | file_1.fastq.gz | file_2.fastq.gz |          PRJNA123456 |        SAMN12345678 |
+| sample  | fastq_1         | fastq_2         | bioproject_accession | biosample_accession | library_source | library_selection | library_strategy |
+| ------- | --------------- | --------------- | -------------------: | ------------------: | -------------: | ----------------: | ---------------: |
+| SampleA | file_1.fastq.gz | file_2.fastq.gz |          PRJNA123456 |        SAMN12345678 |        GENOMIC |            RANDOM |              WGS |
 
 The structure of this file is defined in [assets/schema_input.json](assets/schema_input.json). Validation of the sample sheet is performed by [nf-validation](https://nextflow-io.github.io/nf-validation/).
 
