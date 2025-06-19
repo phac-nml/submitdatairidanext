@@ -22,10 +22,13 @@ process CREATE_ENA_UPLOAD_MANIFEST {
     script:
     """
     create_ena_upload_manifest_json.py \\
-        --study-accession ${meta.bioproject_accession} \\
-        --sample-accession ${meta.biosample_accession} \\
-        --experiment-name ${meta.bioproject_accession}-ILLUMINA-${meta.id} \\
-        --library-name ${meta.id} \\
+        --study-accession "${meta.bioproject_accession}" \\
+        --sample-accession "${meta.biosample_accession}" \\
+        --experiment-name "${meta.bioproject_accession}-ILLUMINA-${meta.id}" \\
+        --library-name "${meta.id}" \\
+        --library-source "${meta.library_source}" \\
+        --library-strategy "${meta.library_strategy}" \\
+        --library-selection "${meta.library_selection}" \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\
         --output ${meta.id}_ena_upload_manifest.json
