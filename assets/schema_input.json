@@ -45,8 +45,35 @@
                 "description": "BioSample accession",
                 "meta": ["biosample_accession"],
                 "errorMessage": "Provide a valid BioSample accession."
+            },
+            "library_source": {
+                "type": "string",
+                "enum": ["genomic", "metagenomic", "transcriptomic", "other"],
+                "description": "Library source type",
+                "meta": ["library_source"],
+                "default": "genomic",
+                "errorMessage": "Library source must be one of: genomic, metagenomic, transcriptomic, or other"
+            },
+            "library_selection": {
+                "type": "string",
+                "enum": ["random", "PCR", "cDNA", "other"],
+                "description": "Library selection method",
+                "meta": ["library_selection"],
+                "default": "random",
+                "errorMessage": "Library selection must be one of: random, PCR, cDNA, or other"
+            },
+            "library_strategy": {
+                "type": "string",
+                "enum": ["WGS", "WES", "RNA-Seq", "other"],
+                "description": "Library strategy",
+                "meta": ["library_strategy"],
+                "default": "WGS",
+                "errorMessage": "Library strategy must be one of: WGS, WES, RNA-Seq, or other"
             }
         },
-        "required": ["sample", "fastq_1", "bioproject_accession", "biosample_accession"]
+        "required": [
+            "sample", "fastq_1", "bioproject_accession", "biosample_accession", 
+            "library_source", "library_selection", "library_strategy"
+        ]
     }
 }
