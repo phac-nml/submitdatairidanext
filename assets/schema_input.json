@@ -156,14 +156,7 @@
             },
             "platform": {
                 "type": "string",
-                "enum": [
-                    "ILLUMINA",
-                    "PACBIO_SMRT",
-                    "ION_TORRENT",
-                    "OXFORD_NANOPORE",
-                    "SOLID",
-                    "OTHER"
-                ],
+                "enum": ["ILLUMINA", "PACBIO_SMRT", "ION_TORRENT", "OXFORD_NANOPORE", "SOLID", "OTHER"],
                 "description": "Sequencing platform used for the library",
                 "meta": ["platform"],
                 "default": "ILLUMINA",
