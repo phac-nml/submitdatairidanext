@@ -12,7 +12,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = new Tuple(["id": "SAMPLE1", "irida_id": "SAMPLE1", "bioproject_accession": "PRJNA123456", "biosample_accession": "SAMN12345678"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
+                input[0] = new Tuple(["id": "SAMPLE1", "irida_id": "SAMPLE1", "bioproject_accession": "PRJNA123456", "biosample_accession": "SAMN12345678", "library_source": "VIRAL RNA", "library_selection": "PCR", "library_strategy": "AMPLICON", "platform": "ILLUMINA", "instrument_model": "Illumina MiSeq"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
                 """
             }
         }
@@ -26,7 +26,12 @@ nextflow_process {
                 def json_manifest = parser.parseText(json_string)
                 assert json_manifest.study == "PRJNA123456"
                 assert json_manifest.sample == "SAMN12345678"
+                assert json_manifest.platform == "ILLUMINA"
+                assert json_manifest.instrument == "Illumina MiSeq"
                 assert json_manifest.library_name == "SAMPLE1"
+                assert json_manifest.library_source == "VIRAL RNA"
+                assert json_manifest.library_strategy == "AMPLICON"
+                assert json_manifest.library_selection == "PCR"
                 assert json_manifest.fastq[0].value == "SAMPLE1_R1.fastq.gz"
                 assert json_manifest.fastq[1].value == "SAMPLE1_R2.fastq.gz"
             }

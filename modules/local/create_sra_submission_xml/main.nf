@@ -21,7 +21,7 @@ process CREATE_SRA_SUBMISSION_XML {
     script:
     """
     create_sra_submission_xml.py \\
-        ./*_sra_addfiles.xml \\
+        ${addfiles_xmls} \\
         --output submission.xml
 
     cat <<-END_VERSIONS > versions.yml
