@@ -94,9 +94,9 @@ def main(args):
         "sequenced_library_attributes": {
             "instrument_model": sequencing_instrument,
             "library_name": args.library_name,
-            "library_source": args.library_source.upper(),
-            "library_selection": args.library_selection.upper(),
-            "library_strategy": args.library_strategy.upper(),
+            "library_source": args.library_source,
+            "library_selection": args.library_selection,
+            "library_strategy": args.library_strategy,
             "library_layout": "PAIRED" if args.fastq2 else "SINGLE",
             "fastq_files": [],
         },
@@ -130,9 +130,9 @@ if __name__ == "__main__":
     parser.add_argument('--sequencing-platform', type=str, default="illumina", help="Sequencing Platform (default: 'illumina')")
     parser.add_argument('--sequencing-instrument', type=str, default="miseq", help="Sequencing instrument (default: 'miseq')")
     parser.add_argument('--library-name', type=str, help="Library Name")
-    parser.add_argument('--library-source', type=str, default="genomic", help="Library Source (default: 'genomic')")
-    parser.add_argument('--library-selection', type=str, default="random", help="Library Selection (default: 'random')")
-    parser.add_argument('--library-strategy', type=str, default="wgs", help="Library Strategy (default: 'wgs')")
+    parser.add_argument('--library-source', type=str, default="GENOMIC", help="Library Source (default: 'GENOMIC')")
+    parser.add_argument('--library-selection', type=str, default="RANDOM", help="Library Selection (default: 'RANDOM')")
+    parser.add_argument('--library-strategy', type=str, default="WGS", help="Library Strategy (default: 'WGS')")
     parser.add_argument('--fastq1', type=Path, required=True, help="Path to FASTQ file 1")
     parser.add_argument('--fastq2', type=Path, help="Path to FASTQ file 2")
     parser.add_argument('--output', type=str, help='Output file')
