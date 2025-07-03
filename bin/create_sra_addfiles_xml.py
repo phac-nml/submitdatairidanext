@@ -74,29 +74,16 @@ def main(args):
     if args.fastq2 == 'null':
         args.fastq2 = None
 
-    instrument_lookup = {
-        "miseq": "Illumina MiSeq",
-        "hiseq": "Illumina HiSeq",
-        "nextseq": "Illumina NextSeq",
-        "novaseq": "Illumina NovaSeq",
-        "pacbio": "PacBio Sequel II",
-        "sanger": "Sanger Sequencing"
-    }
-    sequencing_instrument = instrument_lookup.get(args.sequencing_instrument.lower())
-    if not sequencing_instrument:
-        logger.error(f"Invalid sequencing instrument: {args.sequencing_instrument}")
-        sys.exit(1)
-
     sample_submission = {
         "bioproject_accession": args.bioproject_accession,
         "biosample_accession": args.biosample_accession,
-        "platform": args.sequencing_platform.upper(),
+        "platform": args.platform,  # The platform is not required as an attribute in the XML. Stashing it here for now, will be excluded from the output.
         "sequenced_library_attributes": {
-            "instrument_model": sequencing_instrument,
+            "instrument_model": args.instrument_model,
             "library_name": args.library_name,
-            "library_source": args.library_source.upper(),
-            "library_selection": args.library_selection.upper(),
-            "library_strategy": args.library_strategy.upper(),
+            "library_source": args.library_source,
+            "library_selection": args.library_selection,
+            "library_strategy": args.library_strategy,
             "library_layout": "PAIRED" if args.fastq2 else "SINGLE",
             "fastq_files": [],
         },
@@ -127,12 +114,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create an SRA Submission XML file')
     parser.add_argument('--bioproject-accession', type=str, required=True, help="BioProject Accession")
     parser.add_argument('--biosample-accession', type=str, required=True, help="BioSample Accession")
-    parser.add_argument('--sequencing-platform', type=str, default="illumina", help="Sequencing Platform (default: 'illumina')")
-    parser.add_argument('--sequencing-instrument', type=str, default="miseq", help="Sequencing instrument (default: 'miseq')")
+    parser.add_argument('--platform', type=str, default="ILLUMINA", help="Sequencing Platform (default: 'ILLUMINA')")
+    parser.add_argument('--instrument-model', type=str, default="Illumina MiSeq", help="Sequencing instrument (default: 'Illumina MiSeq')")
     parser.add_argument('--library-name', type=str, help="Library Name")
-    parser.add_argument('--library-source', type=str, default="genomic", help="Library Source (default: 'genomic')")
-    parser.add_argument('--library-selection', type=str, default="random", help="Library Selection (default: 'random')")
-    parser.add_argument('--library-strategy', type=str, default="wgs", help="Library Strategy (default: 'wgs')")
+    parser.add_argument('--library-source', type=str, default="GENOMIC", help="Library Source (default: 'GENOMIC')")
+    parser.add_argument('--library-selection', type=str, default="RANDOM", help="Library Selection (default: 'RANDOM')")
+    parser.add_argument('--library-strategy', type=str, default="WGS", help="Library Strategy (default: 'WGS')")
     parser.add_argument('--fastq1', type=Path, required=True, help="Path to FASTQ file 1")
     parser.add_argument('--fastq2', type=Path, help="Path to FASTQ file 2")
     parser.add_argument('--output', type=str, help='Output file')

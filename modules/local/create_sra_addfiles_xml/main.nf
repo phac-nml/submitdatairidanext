@@ -22,9 +22,14 @@ process CREATE_SRA_ADDFILES_XML {
     script:
     """
     create_sra_addfiles_xml.py \\
-        --bioproject-accession ${meta.bioproject_accession} \\
-        --biosample-accession ${meta.biosample_accession} \\
-        --library-name ${meta.id} \\
+        --bioproject-accession "${meta.bioproject_accession}" \\
+        --biosample-accession "${meta.biosample_accession}" \\
+        --library-name "${meta.id}" \\
+        --library-source "${meta.library_source}" \\
+        --library-strategy "${meta.library_strategy}" \\
+        --library-selection "${meta.library_selection}" \\
+        --platform "${meta.platform}" \\
+        --instrument-model "${meta.instrument_model}" \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\
         --output ${meta.id}_sra_addfiles.xml

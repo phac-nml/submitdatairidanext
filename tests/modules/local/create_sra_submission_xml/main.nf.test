@@ -4,11 +4,11 @@ nextflow_process {
     script "modules/local/create_sra_submission_xml/main.nf"
     process "CREATE_SRA_SUBMISSION_XML"
 
-    test("Basic execution.") {
+    test("Basic execution, check output.") {
 
         when {
             params {
-                outdir = "tests/results"
+                outdir = "output"
             }
             process {
                 """
@@ -19,6 +19,13 @@ nextflow_process {
 
         then {
             assert process.success
+            with(process.out) {
+                def xmlString = path(submission_xml[0]).getText()
+                def parser = new groovy.xml.XmlSlurper()
+                def xmlManifestRootNode = parser.parseText(xmlString)
+
+                assert xmlManifestRootNode.name() == 'Submission'
+            }
         }
 
     }

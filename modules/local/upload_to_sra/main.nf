@@ -1,5 +1,5 @@
 process UPLOAD_TO_SRA {
-
+    label 'process_single'
     // Container directive is intentionally using the "override_configure_container_registry" as an example:
     // How to keep a non-biocontainer/quay.io default, see nextflow.config for details
 

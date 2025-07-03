@@ -4,7 +4,7 @@ nextflow_process {
     script "modules/local/create_sra_addfiles_xml/main.nf"
     process "CREATE_SRA_ADDFILES_XML"
 
-    test("Basic execution.") {
+    test("Basic execution, check output.") {
 
         when {
             params {
@@ -12,14 +12,21 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = new Tuple(["id": "SAMPLE1", "irida_id": "SAMPLE1", "bioproject_accession": "PRJNA123456", "biosample_accession": "SAMN12345678"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
+                input[0] = new Tuple(["id": "SAMPLE1", "irida_id": "SAMPLE1", "bioproject_accession": "PRJNA123456", "biosample_accession": "SAMN12345678", "library_source": "VIRAL RNA", "library_selection": "PCR", "library_strategy": "AMPLICON", "platform": "ILLUMINA", "instrument_model": "Illumina MiSeq"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
                 """
             }
         }
 
         then {
             assert process.success
-        }
 
+            with(process.out) {
+                def xmlString = path(addfiles_xml.get(0)[1]).getText()
+                def parser = new groovy.xml.XmlSlurper()
+                def xmlManifestRootNode = parser.parseText(xmlString)
+
+                assert xmlManifestRootNode.name() == 'AddFiles'
+            }
+        }
     }
 }

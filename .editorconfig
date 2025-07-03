@@ -47,3 +47,8 @@ trim_trailing_whitespace = unset
 [/docs/UI-lessSubmissionProtocol.md]
 indent_style = unset
 trim_trailing_whitespace = unset
+
+[/assets/ncbi_xml_schemas/*/*.xsd]
+indent_style = unset
+end_of_line = unset
+trim_trailing_whitespace = unset
