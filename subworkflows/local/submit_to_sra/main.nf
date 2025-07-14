@@ -1,3 +1,4 @@
+include { CREATE_SRA_UPLOAD_DIR }    from '../../../modules/local/create_sra_upload_dir'
 include { CREATE_SRA_ADDFILES_XML}   from '../../../modules/local/create_sra_addfiles_xml'
 include { CREATE_SRA_SUBMISSION_XML} from '../../../modules/local/create_sra_submission_xml'
 include { UPLOAD_TO_SRA }            from '../../../modules/local/upload_to_sra'
@@ -11,17 +12,20 @@ workflow SUBMIT_TO_SRA {
     sample_metadata = input.map{ meta, _reads -> meta }
     reads = input.map{ _meta, reads -> reads }
 
+    CREATE_SRA_UPLOAD_DIR()
+
     CREATE_SRA_ADDFILES_XML(input)
     ch_versions = ch_versions.mix(CREATE_SRA_ADDFILES_XML.out.versions)
 
-    addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml.map{ meta, addfiles_xml -> addfiles_xml }.collect()
-    CREATE_SRA_SUBMISSION_XML(addfiles_xmls)
+    
+    collected_addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml.map{ _meta, addfiles_xml -> addfiles_xml }.collect()
+    CREATE_SRA_SUBMISSION_XML(collected_addfiles_xmls)
     ch_versions = ch_versions.mix(CREATE_SRA_SUBMISSION_XML.out.versions)
 
-    collected_reads = reads.collect()
     submission_xml = CREATE_SRA_SUBMISSION_XML.out.submission_xml
-    submission_xml_with_collected_reads = submission_xml.combine(collected_reads).map { tuple(it[0], it[1..-1]) }
-    UPLOAD_TO_SRA(submission_xml_with_collected_reads)
+
+    addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml
+    UPLOAD_TO_SRA(input.join(addfiles_xmls).combine(CREATE_SRA_UPLOAD_DIR.out.upload_dir_name))
     ch_versions = ch_versions.mix(UPLOAD_TO_SRA.out.versions)
 
     emit:
