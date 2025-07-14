@@ -13,7 +13,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Optional
 
+VERSION = "0.1.0"
+
 logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def parse_addfiles_xml(addfiles_xml_path: Path) -> ET.ElementTree:
     """
@@ -97,5 +100,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create an SRA Submission XML file by combining AddFiles XML files')
     parser.add_argument('addfiles_xmls', type=str, nargs='+', help='AddFiles XML files')
     parser.add_argument('--output', type=str, help='Output file')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

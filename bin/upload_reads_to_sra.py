@@ -17,8 +17,11 @@ import xml.etree.ElementTree as ET
 
 from pathlib import Path
 
+VERSION = "0.1.0"
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def parse_addfiles_xml(addfiles_xml_path: Path) -> list[dict]:
     """
@@ -133,7 +136,7 @@ def main(args):
 
     library = parse_addfiles_xml(args.addfiles_xml)
 
-    ftp_conn = connect_and_login(args.ftp_user, args.ftp_password, args.ftp_server, args.remote_path, upload_dir_name)    
+    ftp_conn = connect_and_login(args.ftp_user, args.ftp_password, args.ftp_server, args.remote_path, upload_dir_name)
 
     files_to_upload =  args.reads
     if not all(file.exists() for file in files_to_upload):
@@ -189,5 +192,6 @@ if __name__ == "__main__":
     parser.add_argument('--reads', type=Path, nargs='+', help='Path to reads file')
     parser.add_argument('--upload-dir-name', type=Path, default="sra_upload_directory_name.txt", help='File containing upload directory name')
     parser.add_argument('--upload-metadata', type=Path, default="upload_metadata.csv", help='Path to file to write upload metadata')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

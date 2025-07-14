@@ -13,7 +13,11 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Optional
 
+VERSION = "0.1.0"
+
 logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def convert_to_xml(submission_data: dict) -> ET.ElementTree:
     """
@@ -123,5 +127,6 @@ if __name__ == "__main__":
     parser.add_argument('--fastq1', type=Path, required=True, help="Path to FASTQ file 1")
     parser.add_argument('--fastq2', type=Path, help="Path to FASTQ file 2")
     parser.add_argument('--output', type=str, help='Output file')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

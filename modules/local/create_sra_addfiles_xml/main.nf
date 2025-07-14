@@ -36,7 +36,7 @@ process CREATE_SRA_ADDFILES_XML {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        create_sra_addfiles_xml.py : 0.1.0
+        create_sra_addfiles_xml.py : \$(create_sra_addfiles_xml.py --version | awk '{print \$2}')
     END_VERSIONS
     """
 }

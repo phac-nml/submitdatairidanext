@@ -11,6 +11,8 @@ import logging
 
 from pathlib import Path
 
+VERSION = "0.1.0"
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -70,5 +72,6 @@ if __name__ == "__main__":
     parser.add_argument('--ftp-password', type=str, default="anonymous", help='FTP password')
     parser.add_argument('--remote-path', type=Path, help='Remote path on server')
     parser.add_argument('--upload-dir-name', type=Path, default="upload_directory_name.txt", help='File containing upload directory name')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

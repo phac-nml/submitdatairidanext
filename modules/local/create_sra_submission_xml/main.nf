@@ -26,7 +26,7 @@ process CREATE_SRA_SUBMISSION_XML {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        create_sra_submission_xml.py : 0.1.0
+        create_sra_submission_xml.py : \$(create_sra_submission_xml.py --version | awk '{print \$2}')
     END_VERSIONS
     """
 }
