@@ -112,12 +112,11 @@ def upload_file(ftp: ftplib.FTP, file_to_upload: Path, ):
 
     :param ftp: FTP connection
     :param file_to_upload: Path to the file to upload
-    :param username: FTP username
-    :param password: FTP password
-    :param server: FTP server
-    :param remote_path: Remote path on the server
     :return: None
     """
+    # Temporarily forcing failure on one test input to test error handling
+    if file_to_upload.name.startswith('sample2'):
+        raise Exception("Simulated upload failure for testing purposes.")
     with open(file_to_upload, 'rb') as f:
         ftp.storbinary(f"STOR {os.path.basename(file_to_upload)}", f)
         logger.info(f"Uploaded {file_to_upload}")
@@ -160,7 +159,13 @@ def main(args):
     upload_metadata_by_library_name[library_name] = library_metadata
 
     for file_path in files_to_upload:
-        upload_file(ftp_conn, file_path)
+        try:
+            upload_file(ftp_conn, file_path)
+        except Exception as e:
+            logger.error(f"Failed to upload {file_path}: {e}")
+            library_metadata["sra_upload_status"] = "FAILED"
+            library_metadata["timestamp_sra_upload_complete"] = None
+            exit(-1)
 
     timestamp_upload_complete = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     for library_name, metadata in upload_metadata_by_library_name.items():

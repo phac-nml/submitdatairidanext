@@ -6,7 +6,7 @@ include { COMPLETE_SRA_UPLOAD }      from '../../../modules/local/complete_sra_u
 
 workflow SUBMIT_TO_SRA {
     take:
-    input
+    input // channel: [ val(meta), path(reads) ]
 
     main:
     ch_versions = Channel.empty()

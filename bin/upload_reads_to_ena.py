@@ -32,7 +32,7 @@ def parse_upload_manifest(manifest_path: Path) -> dict:
     """
     if not manifest_path.is_file():
         logger.error(f"Manifest file not found: {manifest_path}")
-        sys.exit(-1)
+        sys.exit(1)
 
     manifest_data = {}
     try:
@@ -42,7 +42,7 @@ def parse_upload_manifest(manifest_path: Path) -> dict:
 
     except json.JSONDecodeError as e:
         logger.error(f"Error parsing {manifest_path}: {e}")
-        sys.exit(-1)
+        sys.exit(1)
 
     return manifest_data
 
@@ -52,13 +52,18 @@ def main(args):
 
     if not upload_manifest:
         logger.error("No valid upload manifest data found.")
-        sys.exit(-1)
+        exit(1)
 
     library_name = upload_manifest.get("library_name", None)
 
+    # Temporarily inducing failure on one test input to test error handling
+    if library_name.startswith('SAMPLE2'):
+        logger.error(f"Failed to upload files for library: {library_name}")
+        exit(1)
+
     if not library_name:
         logger.error("Library name not found in upload manifest.")
-        sys.exit(-1)
+        exit(1)
 
     upload_metadata = {
         "library_name": library_name,

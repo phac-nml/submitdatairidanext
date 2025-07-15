@@ -12,7 +12,7 @@ process UPLOAD_READS_TO_SRA {
     tuple val(meta), path(reads), path(addfiles_xml), path(upload_dir_name)
 
     output:
-    path("sra_upload.log.txt")             , emit: upload_log
+    path("${meta.id}_sra_upload.log.txt")  , emit: upload_log
     path("${meta.id}_upload_metadata.csv") , emit: upload_metadata
     path "versions.yml"                    , emit: versions
 
@@ -32,7 +32,7 @@ process UPLOAD_READS_TO_SRA {
         --upload-dir-name "${upload_dir_name}" \\
         --upload-metadata "${meta.id}_upload_metadata.csv" \\
         --reads ${reads} \\
-        2> >(tee -a sra_upload.log.txt >&2)
+        2> >(tee -a ${meta.id}_sra_upload.log.txt >&2)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

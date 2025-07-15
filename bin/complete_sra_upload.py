@@ -67,10 +67,6 @@ def upload_file(ftp: ftplib.FTP, file_to_upload: Path, ):
 
     :param ftp: FTP connection
     :param file_to_upload: Path to the file to upload
-    :param username: FTP username
-    :param password: FTP password
-    :param server: FTP server
-    :param remote_path: Remote path on the server
     :return: None
     """
     with open(file_to_upload, 'rb') as f:
@@ -91,7 +87,12 @@ def main(args):
 
     ftp_conn = connect_and_login(args.ftp_user, args.ftp_password, args.ftp_server, args.remote_path, upload_dir_name)
 
-    upload_file(ftp_conn, args.submission_xml)
+    try:
+        upload_file(ftp_conn, args.submission_xml)
+    except Exception as e:
+        logger.error(f"Failed to upload {args.submission_xml}: {e}")
+        exit(1)
+
     logger.info(f"Uploaded submission XML file: {args.submission_xml}")
 
     with open('submission.ready', 'w') as f:
