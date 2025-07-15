@@ -17,6 +17,7 @@ workflow SUBMIT_TO_SRA {
     // So we'll create the upload directory first and
     // Pass its name to the upload process
     CREATE_SRA_UPLOAD_DIR()
+    ch_versions = ch_versions.mix(CREATE_SRA_UPLOAD_DIR.out.versions)
     upload_dir_name = CREATE_SRA_UPLOAD_DIR.out.upload_dir_name
 
     CREATE_SRA_ADDFILES_XML(input)

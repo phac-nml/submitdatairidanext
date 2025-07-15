@@ -9,6 +9,7 @@ process CREATE_SRA_UPLOAD_DIR {
 
     output:
     path("sra_upload_directory_name.txt") , emit: upload_dir_name
+    path "versions.yml"                   , emit: versions
 
     script:
     sra_submission_dir = params.test_upload ? "Test" : "Production"
