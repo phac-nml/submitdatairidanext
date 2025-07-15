@@ -9,7 +9,6 @@ workflow SUBMIT_TO_ENA {
     main:
     ch_versions = Channel.empty()
     sample_metadata = input.map{ meta, _reads -> meta }
-    reads = input.map{ _meta, reads -> reads }
 
     upload_manifest = CREATE_ENA_UPLOAD_MANIFEST(input).upload_manifest
     ch_versions = ch_versions.mix(CREATE_ENA_UPLOAD_MANIFEST.out.versions)
@@ -18,7 +17,7 @@ workflow SUBMIT_TO_ENA {
     ch_versions = ch_versions.mix(UPLOAD_READS_TO_ENA.out.versions)
 
     all_uploads = sample_metadata.join(UPLOAD_READS_TO_ENA.out.upload_metadata, remainder: true)
-    completed_uploads = all_uploads.filter{ it[1] != null }
+    _completed_uploads = all_uploads.filter{ it[1] != null }
     failed_uploads = all_uploads.filter{ it[1] == null }.toList()
 
     UPLOAD_CHECKER(failed_uploads)
