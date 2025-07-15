@@ -11,8 +11,8 @@ process UPLOAD_READS_TO_ENA {
     tuple val(meta), path(reads), path(upload_manifest)
 
     output:
-    path("${meta.id}_ena_upload.log.txt")    , emit: upload_log
-    path("${meta.id}_upload_metadata.csv")   , emit: upload_metadata
+    tuple val(meta), path("${meta.id}_ena_upload.log.txt")    , emit: upload_log
+    tuple val(meta), path("${meta.id}_upload_metadata.csv")   , emit: upload_metadata
     path "versions.yml"                      , emit: versions
 
     when:

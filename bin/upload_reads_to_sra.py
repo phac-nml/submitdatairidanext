@@ -114,9 +114,6 @@ def upload_file(ftp: ftplib.FTP, file_to_upload: Path, ):
     :param file_to_upload: Path to the file to upload
     :return: None
     """
-    # Temporarily forcing failure on one test input to test error handling
-    if file_to_upload.name.startswith('sample2'):
-        raise Exception("Simulated upload failure for testing purposes.")
     with open(file_to_upload, 'rb') as f:
         ftp.storbinary(f"STOR {os.path.basename(file_to_upload)}", f)
         logger.info(f"Uploaded {file_to_upload}")
@@ -134,6 +131,11 @@ def main(args):
         exit(1)
 
     library = parse_addfiles_xml(args.addfiles_xml)
+
+    # Temporarily inducing failure on one test input to test error handling
+    if library['library_name'].startswith('FAILME'):
+        logger.error(f"Failed to upload files for library: {library['library_name']}")
+        exit(1)
 
     ftp_conn = connect_and_login(args.ftp_user, args.ftp_password, args.ftp_server, args.remote_path, upload_dir_name)
 

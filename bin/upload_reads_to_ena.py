@@ -57,7 +57,7 @@ def main(args):
     library_name = upload_manifest.get("library_name", None)
 
     # Temporarily inducing failure on one test input to test error handling
-    if library_name.startswith('SAMPLE2'):
+    if library_name.startswith('FAILME'):
         logger.error(f"Failed to upload files for library: {library_name}")
         exit(1)
 
