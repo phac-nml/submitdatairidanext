@@ -33,7 +33,7 @@ workflow SUBMIT_TO_SRA {
 
     // Only addfiles.xml files from completed uploads
     // will be used to create the submission XML
-    collected_addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml.join(completed_uploads).view().map{ _meta, addfiles_xml, _upload_metadata -> addfiles_xml }.collect()
+    collected_addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml.join(completed_uploads).map{ _meta, addfiles_xml, _upload_metadata -> addfiles_xml }.collect()
     CREATE_SRA_SUBMISSION_XML(collected_addfiles_xmls)
     ch_versions = ch_versions.mix(CREATE_SRA_SUBMISSION_XML.out.versions)
 
