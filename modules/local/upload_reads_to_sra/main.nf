@@ -12,9 +12,9 @@ process UPLOAD_READS_TO_SRA {
     tuple val(meta), path(reads), path(addfiles_xml), path(upload_dir_name)
 
     output:
-    path("${meta.id}_sra_upload.log.txt")  , emit: upload_log
-    path("${meta.id}_upload_metadata.csv") , emit: upload_metadata
-    path "versions.yml"                    , emit: versions
+    tuple val(meta), path("${meta.id}_sra_upload.log.txt")  , emit: upload_log
+    tuple val(meta), path("${meta.id}_upload_metadata.csv") , emit: upload_metadata
+    path "versions.yml"                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
