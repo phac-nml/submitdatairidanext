@@ -218,6 +218,13 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "max_jobs_with_network_connections": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 1,
+                    "description": "Maximum number of jobs with network connections allowed to run at once",
+                    "hidden": true
                 }
             }
         }
