@@ -24,7 +24,7 @@ process CREATE_SRA_ADDFILES_XML {
     create_sra_addfiles_xml.py \\
         --bioproject-accession "${meta.bioproject_accession}" \\
         --biosample-accession "${meta.biosample_accession}" \\
-        --library-name "${meta.id}" \\
+        --library-name "${meta.library_name}" \\
         --library-source "${meta.library_source}" \\
         --library-strategy "${meta.library_strategy}" \\
         --library-selection "${meta.library_selection}" \\

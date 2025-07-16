@@ -25,7 +25,7 @@ process CREATE_ENA_UPLOAD_MANIFEST {
         --study-accession "${meta.bioproject_accession}" \\
         --sample-accession "${meta.biosample_accession}" \\
         --experiment-name "${meta.bioproject_accession}-${meta.platform}-${meta.id}" \\
-        --library-name "${meta.id}" \\
+        --library-name "${meta.library_name}" \\
         --library-source "${meta.library_source}" \\
         --library-strategy "${meta.library_strategy}" \\
         --library-selection "${meta.library_selection}" \\

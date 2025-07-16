@@ -1,3 +1,4 @@
+include { RENAME_READS }             from '../../../modules/local/rename_reads'
 include { CREATE_SRA_UPLOAD_DIR }    from '../../../modules/local/create_sra_upload_dir'
 include { CREATE_SRA_ADDFILES_XML}   from '../../../modules/local/create_sra_addfiles_xml'
 include { CREATE_SRA_SUBMISSION_XML} from '../../../modules/local/create_sra_submission_xml'
@@ -11,7 +12,10 @@ workflow SUBMIT_TO_SRA {
 
     main:
     ch_versions = Channel.empty()
-    sample_metadata = input.map{ meta, _reads -> meta }
+    sample_metadata = input.map{ meta, _reads -> meta }.view()
+
+    RENAME_READS(input)
+    renamed_reads = RENAME_READS.out.renamed_reads
 
     // We'll upload all reads into a single timestamped directory
     // So we'll create the upload directory first and
@@ -20,11 +24,11 @@ workflow SUBMIT_TO_SRA {
     ch_versions = ch_versions.mix(CREATE_SRA_UPLOAD_DIR.out.versions)
     upload_dir_name = CREATE_SRA_UPLOAD_DIR.out.upload_dir_name
 
-    CREATE_SRA_ADDFILES_XML(input)
+    CREATE_SRA_ADDFILES_XML(renamed_reads)
     ch_versions = ch_versions.mix(CREATE_SRA_ADDFILES_XML.out.versions)
 
     addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml
-    upload_inputs = input.join(addfiles_xmls).combine(upload_dir_name)
+    upload_inputs = renamed_reads.join(addfiles_xmls).combine(upload_dir_name)
     UPLOAD_READS_TO_SRA(upload_inputs)
     ch_versions = ch_versions.mix(UPLOAD_READS_TO_SRA.out.versions)
 
