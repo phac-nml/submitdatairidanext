@@ -58,14 +58,14 @@ The pipeline includes two subworkflows, one for submitting to [SRA](https://www.
 
 </details>
 
-#### Upload to SRA
+#### Upload Reads to SRA
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `upload_to_sra/`
-  - Upload Log: `sra_upload_log.txt`
-  - Upload Metadata: `upload_metadata.csv`
+- `upload_reads_to_sra/`
+  - Upload Log: `ID_sra_upload_log.txt`
+  - Upload Metadata: `ID_upload_metadata.csv`
 
 </details>
 
@@ -81,28 +81,27 @@ The pipeline includes two subworkflows, one for submitting to [SRA](https://www.
 
 </details>
 
-#### Combine ENA Upload Manifests
+#### Upload Reads to ENA
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `combine_ena_upload_manifests/`
-  - Multi-Upload Manifest JSON: `multi_upload_manifest.json`
-
-</details>
-
-#### Upload to ENA
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `upload_to_ena/`
-  - Upload Log: `ena_upload_log.txt`
-  - Upload Metadata: `upload_metadata.csv`
+- `upload_reads_to_ena/`
+  - Upload Log: `ID_ena_upload_log.txt`
+  - Upload Metadata: `ID_upload_metadata.csv`
 
 </details>
 
 ### Common
+
+#### Upload Checker
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `upload_checker/`
+  - Error Report: `errors.csv`
+</details>
 
 #### IRIDA Next Output
 
