@@ -12,9 +12,9 @@ process UPLOAD_READS_TO_SRA {
     tuple val(meta), path(reads), path(addfiles_xml), path(upload_dir_name)
 
     output:
-    tuple val(meta), path("${meta.id}_sra_upload.log.txt")  , emit: upload_log
-    tuple val(meta), path("${meta.id}_upload_metadata.csv") , emit: upload_metadata
-    path "versions.yml"                                     , emit: versions
+    tuple val(meta), path("${meta.library_name}_sra_upload.log.txt")  , emit: upload_log
+    tuple val(meta), path("${meta.library_name}_upload_metadata.csv") , emit: upload_metadata
+    path "versions.yml"                                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,9 +30,10 @@ process UPLOAD_READS_TO_SRA {
         --remote-path "submit/${sra_submission_dir}" \\
         --addfiles-xml "${addfiles_xml}" \\
         --upload-dir-name "${upload_dir_name}" \\
-        --upload-metadata "${meta.id}_upload_metadata.csv" \\
+        --irida-id "${meta.irida_id}" \\
+        --upload-metadata "${meta.library_name}_upload_metadata.csv" \\
         --reads ${reads} \\
-        2> >(tee -a ${meta.id}_sra_upload.log.txt >&2)
+        2> >(tee -a ${meta.library_name}_sra_upload.log.txt >&2)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

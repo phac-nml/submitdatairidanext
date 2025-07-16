@@ -2,9 +2,6 @@ process CREATE_SRA_ADDFILES_XML {
     tag "$meta.id"
     label 'process_single'
 
-    // Container directive is intentionally using the "override_configure_container_registry" as an example:
-    // How to keep a non-biocontainer/quay.io default, see nextflow.config for details
-
     container "${ task.ext.override_configured_container_registry != false ?
     'docker.io/python:3.10' :
     'python:3.10' }"
@@ -32,7 +29,7 @@ process CREATE_SRA_ADDFILES_XML {
         --instrument-model "${meta.instrument_model}" \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\
-        --output ${meta.id}_sra_addfiles.xml
+        --output ${meta.library_name}_sra_addfiles.xml
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

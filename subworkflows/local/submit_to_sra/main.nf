@@ -1,10 +1,11 @@
-include { RENAME_READS }             from '../../../modules/local/rename_reads'
-include { CREATE_SRA_UPLOAD_DIR }    from '../../../modules/local/create_sra_upload_dir'
-include { CREATE_SRA_ADDFILES_XML}   from '../../../modules/local/create_sra_addfiles_xml'
-include { CREATE_SRA_SUBMISSION_XML} from '../../../modules/local/create_sra_submission_xml'
-include { UPLOAD_READS_TO_SRA }      from '../../../modules/local/upload_reads_to_sra'
-include { COMPLETE_SRA_UPLOAD }      from '../../../modules/local/complete_sra_upload'
-include { UPLOAD_CHECKER }           from '../../../modules/local/upload_checker'
+include { RENAME_READS }                     from '../../../modules/local/rename_reads'
+include { CREATE_SRA_UPLOAD_DIR }            from '../../../modules/local/create_sra_upload_dir'
+include { CREATE_SRA_ADDFILES_XML}           from '../../../modules/local/create_sra_addfiles_xml'
+include { CREATE_SRA_SUBMISSION_XML}         from '../../../modules/local/create_sra_submission_xml'
+include { UPLOAD_READS_TO_SRA }              from '../../../modules/local/upload_reads_to_sra'
+include { COMPLETE_SRA_UPLOAD }              from '../../../modules/local/complete_sra_upload'
+include { UPLOAD_CHECKER }                   from '../../../modules/local/upload_checker'
+include { APPEND_ERRORS_TO_UPLOAD_METADATA } from '../../../modules/local/append_errors_to_upload_metadata'
 
 workflow SUBMIT_TO_SRA {
     take:
@@ -12,7 +13,7 @@ workflow SUBMIT_TO_SRA {
 
     main:
     ch_versions = Channel.empty()
-    sample_metadata = input.map{ meta, _reads -> meta }.view()
+    sample_metadata = input.map{ meta, _reads -> meta }
 
     RENAME_READS(input)
     renamed_reads = RENAME_READS.out.renamed_reads
@@ -47,6 +48,10 @@ workflow SUBMIT_TO_SRA {
     ch_versions = ch_versions.mix(COMPLETE_SRA_UPLOAD.out.versions)
 
     UPLOAD_CHECKER(failed_uploads)
+    error_report = UPLOAD_CHECKER.out.error_report
+    collected_upload_metadata_files = UPLOAD_READS_TO_SRA.out.upload_metadata.map{ it -> it[1] }.collect()
+    APPEND_ERRORS_TO_UPLOAD_METADATA(collected_upload_metadata_files.combine(error_report))
+    ch_versions = ch_versions.mix(APPEND_ERRORS_TO_UPLOAD_METADATA.out.versions)
 
     emit:
     versions = ch_versions        // channel: [ process_1_versions.yml, process_2_versions.yml, ... ]
