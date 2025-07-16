@@ -101,7 +101,7 @@ The pipeline includes two subworkflows, one for submitting to [SRA](https://www.
 
 - `upload_checker/`
   - Error Report: `errors.csv`
-</details>
+  </details>
 
 #### IRIDA Next Output
 

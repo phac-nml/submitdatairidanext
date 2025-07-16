@@ -105,7 +105,7 @@ def append_errors_to_metadata(upload_metadata: dict, errors: list[dict], destina
                 'library_name': library_name,
                 f'{destination.lower()}_upload_status': 'FAILED',
             }
-            
+
     return upload_metadata
 
 
