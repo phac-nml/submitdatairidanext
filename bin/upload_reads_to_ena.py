@@ -66,6 +66,7 @@ def main(args):
         exit(1)
 
     upload_metadata = {
+        "irida_id": args.irida_id,
         "library_name": library_name,
         "ena_upload_status": "PENDING",
         "timestamp_ena_upload_start": None,
@@ -103,7 +104,7 @@ def main(args):
 
     upload_metadata_path = Path(args.upload_metadata)
     with open(upload_metadata_path, 'w', newline='') as csvfile:
-        fieldnames = ["library_name", "ena_upload_status", "timestamp_ena_upload_start", "timestamp_ena_upload_end"]
+        fieldnames = ["irida_id", "library_name", "ena_upload_status", "timestamp_ena_upload_start", "timestamp_ena_upload_end"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerow(upload_metadata)
@@ -117,6 +118,7 @@ if __name__ == "__main__":
     parser.add_argument('--input-dir', type=Path, help='Path to location of files to upload')
     parser.add_argument('--test-upload', action='store_true', help='Submit a test upload')
     parser.add_argument('--upload-metadata', type=Path, default="upload_metadata.csv", help='Path to file to write upload metadata')
+    parser.add_argument('--irida-id', type=str, help='IRIDA ID for the library')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

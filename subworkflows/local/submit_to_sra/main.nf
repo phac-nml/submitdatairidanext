@@ -1,9 +1,11 @@
-include { CREATE_SRA_UPLOAD_DIR }    from '../../../modules/local/create_sra_upload_dir'
-include { CREATE_SRA_ADDFILES_XML}   from '../../../modules/local/create_sra_addfiles_xml'
-include { CREATE_SRA_SUBMISSION_XML} from '../../../modules/local/create_sra_submission_xml'
-include { UPLOAD_READS_TO_SRA }      from '../../../modules/local/upload_reads_to_sra'
-include { COMPLETE_SRA_UPLOAD }      from '../../../modules/local/complete_sra_upload'
-include { UPLOAD_CHECKER }           from '../../../modules/local/upload_checker'
+include { RENAME_READS }                     from '../../../modules/local/rename_reads'
+include { CREATE_SRA_UPLOAD_DIR }            from '../../../modules/local/create_sra_upload_dir'
+include { CREATE_SRA_ADDFILES_XML}           from '../../../modules/local/create_sra_addfiles_xml'
+include { CREATE_SRA_SUBMISSION_XML}         from '../../../modules/local/create_sra_submission_xml'
+include { UPLOAD_READS_TO_SRA }              from '../../../modules/local/upload_reads_to_sra'
+include { COMPLETE_SRA_UPLOAD }              from '../../../modules/local/complete_sra_upload'
+include { UPLOAD_CHECKER }                   from '../../../modules/local/upload_checker'
+include { APPEND_ERRORS_TO_UPLOAD_METADATA } from '../../../modules/local/append_errors_to_upload_metadata'
 
 workflow SUBMIT_TO_SRA {
     take:
@@ -13,6 +15,9 @@ workflow SUBMIT_TO_SRA {
     ch_versions = Channel.empty()
     sample_metadata = input.map{ meta, _reads -> meta }
 
+    RENAME_READS(input)
+    renamed_reads = RENAME_READS.out.renamed_reads
+
     // We'll upload all reads into a single timestamped directory
     // So we'll create the upload directory first and
     // Pass its name to the upload process
@@ -20,11 +25,11 @@ workflow SUBMIT_TO_SRA {
     ch_versions = ch_versions.mix(CREATE_SRA_UPLOAD_DIR.out.versions)
     upload_dir_name = CREATE_SRA_UPLOAD_DIR.out.upload_dir_name
 
-    CREATE_SRA_ADDFILES_XML(input)
+    CREATE_SRA_ADDFILES_XML(renamed_reads)
     ch_versions = ch_versions.mix(CREATE_SRA_ADDFILES_XML.out.versions)
 
     addfiles_xmls = CREATE_SRA_ADDFILES_XML.out.addfiles_xml
-    upload_inputs = input.join(addfiles_xmls).combine(upload_dir_name)
+    upload_inputs = renamed_reads.join(addfiles_xmls).combine(upload_dir_name)
     UPLOAD_READS_TO_SRA(upload_inputs)
     ch_versions = ch_versions.mix(UPLOAD_READS_TO_SRA.out.versions)
 
@@ -43,6 +48,10 @@ workflow SUBMIT_TO_SRA {
     ch_versions = ch_versions.mix(COMPLETE_SRA_UPLOAD.out.versions)
 
     UPLOAD_CHECKER(failed_uploads)
+    error_report = UPLOAD_CHECKER.out.error_report
+    collected_upload_metadata_files = UPLOAD_READS_TO_SRA.out.upload_metadata.map{ it -> it[1] }.collect()
+    APPEND_ERRORS_TO_UPLOAD_METADATA(collected_upload_metadata_files.combine(error_report))
+    ch_versions = ch_versions.mix(APPEND_ERRORS_TO_UPLOAD_METADATA.out.versions)
 
     emit:
     versions = ch_versions        // channel: [ process_1_versions.yml, process_2_versions.yml, ... ]

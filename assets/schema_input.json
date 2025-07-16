@@ -32,6 +32,13 @@
                     }
                 ]
             },
+            "library_name": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "description": "Name of the library",
+                "meta": ["library_name"],
+                "errorMessage": "Library name must be provided and cannot contain spaces"
+            },
             "bioproject_accession": {
                 "type": "string",
                 "pattern": "^PRJ[A-Z]{2}\\d+$",
@@ -212,6 +219,7 @@
             "fastq_1",
             "bioproject_accession",
             "biosample_accession",
+            "library_name",
             "library_source",
             "library_selection",
             "library_strategy",

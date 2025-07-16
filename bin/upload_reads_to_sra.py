@@ -153,6 +153,7 @@ def main(args):
         logger.error("Library name is missing in the submission XML.")
         exit(-1)
     library_metadata = {
+        "irida_id": args.irida_id,
         "library_name": library.get("library_name", None),
         "sra_upload_status": "PENDING",
         "timestamp_sra_upload_start": timestamp_upload_start,
@@ -177,6 +178,7 @@ def main(args):
     # Write upload metadata to a CSV file
     upload_metadata_path = args.upload_metadata
     upload_metadata_fieldnames = [
+        "irida_id",
         "library_name",
         "sra_upload_status",
         "timestamp_sra_upload_start",
@@ -199,6 +201,7 @@ if __name__ == "__main__":
     parser.add_argument('--reads', type=Path, nargs='+', help='Path to reads file')
     parser.add_argument('--upload-dir-name', type=Path, default="sra_upload_directory_name.txt", help='File containing upload directory name')
     parser.add_argument('--upload-metadata', type=Path, default="upload_metadata.csv", help='Path to file to write upload metadata')
+    parser.add_argument('--irida-id', type=str, help='IRIDA ID for the library')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

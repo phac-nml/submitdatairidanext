@@ -11,9 +11,9 @@ process UPLOAD_READS_TO_ENA {
     tuple val(meta), path(reads), path(upload_manifest)
 
     output:
-    tuple val(meta), path("${meta.id}_ena_upload.log.txt")    , emit: upload_log
-    tuple val(meta), path("${meta.id}_upload_metadata.csv")   , emit: upload_metadata
-    path "versions.yml"                      , emit: versions
+    tuple val(meta), path("${meta.library_name}_ena_upload.log.txt")    , emit: upload_log
+    tuple val(meta), path("${meta.library_name}_upload_metadata.csv")   , emit: upload_metadata
+    path "versions.yml"                                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,8 +28,9 @@ process UPLOAD_READS_TO_ENA {
         --upload-manifest ${upload_manifest} \\
         --input-dir . \\
         ${test_flag} \\
-        --upload-metadata ${meta.id}_upload_metadata.csv \\
-        2> >(tee -a ${meta.id}_ena_upload.log.txt >&2)
+        --upload-metadata ${meta.library_name}_upload_metadata.csv \\
+        --irida-id "${meta.irida_id}" \\
+        2> >(tee -a ${meta.library_name}_ena_upload.log.txt >&2)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
