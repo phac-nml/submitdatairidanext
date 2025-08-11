@@ -14,8 +14,8 @@ process CREATE_SRA_UPLOAD_DIR {
     """
     create_sra_upload_dir.py \\
         --ftp-server "${params.sra_ftp_server}" \\
-        --ftp-user "${params.upload_username}" \\
-        --ftp-password "${params.upload_password}" \\
+        --ftp-user "\${UPLOAD_USERNAME}" \\
+        --ftp-password "\${UPLOAD_PASSWORD}" \\
         --remote-path "submit/${sra_submission_dir}" \\
         --upload-dir-name "sra_upload_directory_name.txt" \\
         2> >(tee -a sra_upload.log.txt >&2)

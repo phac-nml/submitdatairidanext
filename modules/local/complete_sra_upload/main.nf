@@ -21,8 +21,8 @@ process COMPLETE_SRA_UPLOAD {
 
     complete_sra_upload.py \\
         --ftp-server "${params.sra_ftp_server}" \\
-        --ftp-user "${params.upload_username}" \\
-        --ftp-password "${params.upload_password}" \\
+        --ftp-user "\${UPLOAD_USERNAME}" \\
+        --ftp-password "\${UPLOAD_PASSWORD}" \\
         --remote-path "submit/${sra_submission_dir}" \\
         --submission-xml "${submission_xml}" \\
         --upload-dir-name "${upload_dir_name}" \\
