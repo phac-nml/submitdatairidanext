@@ -20,14 +20,15 @@ process UPLOAD_READS_TO_SRA {
     task.ext.when == null || task.ext.when
 
     script:
-    sra_submission_dir = params.test_upload ? "Test" : "Production"
+    // sra_submission_dir = params.test_upload ? "Test" : "Production"
+    sra_submission_dir = "dfornika_bcgsc.ca_37h9i5Qj"
     """
 
     upload_reads_to_sra.py \\
         --ftp-server "${params.sra_ftp_server}" \\
-        --ftp-user "\${UPLOAD_USERNAME}" \\
-        --ftp-password "\${UPLOAD_PASSWORD}" \\
-        --remote-path "submit/${sra_submission_dir}" \\
+        --ftp-user "\${SRA_UPLOAD_USERNAME}" \\
+        --ftp-password "\${SRA_UPLOAD_PASSWORD}" \\
+        --remote-path "uploads/${sra_submission_dir}" \\
         --addfiles-xml "${addfiles_xml}" \\
         --upload-dir-name "${upload_dir_name}" \\
         --irida-id "${meta.irida_id}" \\

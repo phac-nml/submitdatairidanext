@@ -16,14 +16,15 @@ process COMPLETE_SRA_UPLOAD {
     task.ext.when == null || task.ext.when
 
     script:
-    sra_submission_dir = params.test_upload ? "Test" : "Production"
+    // sra_submission_dir = params.test_upload ? "Test" : "Production"
+    sra_submission_dir = "dfornika_bcgsc.ca_37h9i5Qj"
     """
 
     complete_sra_upload.py \\
         --ftp-server "${params.sra_ftp_server}" \\
-        --ftp-user "\${UPLOAD_USERNAME}" \\
-        --ftp-password "\${UPLOAD_PASSWORD}" \\
-        --remote-path "submit/${sra_submission_dir}" \\
+        --ftp-user "\${SRA_UPLOAD_USERNAME}" \\
+        --ftp-password "\${SRA_UPLOAD_PASSWORD}" \\
+        --remote-path "uploads/${sra_submission_dir}" \\
         --submission-xml "${submission_xml}" \\
         --upload-dir-name "${upload_dir_name}" \\
         2> >(tee -a sra_upload.log.txt >&2)

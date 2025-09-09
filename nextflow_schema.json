@@ -49,6 +49,13 @@
                     "fa_icon": "fas fa-bug",
                     "help_text": "If set to `true`, the pipeline will submit a test upload to the SRA or ENA server."
                 },
+                "sra_user_account_dirname": {
+                    "type": "string",
+                    "description": "User account directory name for SRA submission.",
+                    "default": "NOT_SET",
+                    "fa_icon": "fas fa-user",
+                    "help_text": "Your SRA user account directory name. See: https://submit.ncbi.nlm.nih.gov/subs/sra/#files_upload_ftp for more information."
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
