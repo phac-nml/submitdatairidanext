@@ -16,15 +16,18 @@ process COMPLETE_SRA_UPLOAD {
     task.ext.when == null || task.ext.when
 
     script:
+    // We're temporarily using the sra_user_account_dirname param to control
+    // where uploads go to facilitate testing & development.
+    // In the future we'll likely revert to using the sra_submission_dir param
+    // to control whether uploads go to a test or production area on the SRA FTP server
     // sra_submission_dir = params.test_upload ? "Test" : "Production"
-    sra_submission_dir = "dfornika_bcgsc.ca_37h9i5Qj"
     """
 
     complete_sra_upload.py \\
         --ftp-server "${params.sra_ftp_server}" \\
-        --ftp-user "\${SRA_UPLOAD_USERNAME}" \\
-        --ftp-password "\${SRA_UPLOAD_PASSWORD}" \\
-        --remote-path "uploads/${sra_submission_dir}" \\
+        --ftp-user "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_USERNAME}" \\
+        --ftp-password "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_PASSWORD}" \\
+        --remote-path "uploads/${params.sra_user_account_dirname}" \\
         --submission-xml "${submission_xml}" \\
         --upload-dir-name "${upload_dir_name}" \\
         2> >(tee -a sra_upload.log.txt >&2)

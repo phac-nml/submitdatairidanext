@@ -29,8 +29,8 @@ process UPLOAD_READS_TO_SRA {
 
     upload_reads_to_sra.py \\
         --ftp-server "${params.sra_ftp_server}" \\
-        --ftp-user "\${SRA_UPLOAD_USERNAME}" \\
-        --ftp-password "\${SRA_UPLOAD_PASSWORD}" \\
+        --ftp-user "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_USERNAME}" \\
+        --ftp-password "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_PASSWORD}" \\
         --remote-path "uploads/${params.sra_user_account_dirname}" \\
         --addfiles-xml "${addfiles_xml}" \\
         --upload-dir-name "${upload_dir_name}" \\

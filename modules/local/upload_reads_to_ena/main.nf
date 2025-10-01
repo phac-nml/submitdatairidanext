@@ -23,8 +23,8 @@ process UPLOAD_READS_TO_ENA {
     """
 
     upload_reads_to_ena.py \\
-        --upload-username "\${ENA_UPLOAD_USERNAME}" \\
-        --upload-password "\${ENA_UPLOAD_PASSWORD}" \\
+        --upload-username "\${SUBMITDATAIRIDANEXT_ENA_UPLOAD_USERNAME}" \\
+        --upload-password "\${SUBMITDATAIRIDANEXT_ENA_UPLOAD_PASSWORD}" \\
         --upload-manifest ${upload_manifest} \\
         --input-dir . \\
         ${test_flag} \\
