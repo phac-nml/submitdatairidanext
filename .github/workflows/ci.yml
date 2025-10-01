@@ -74,7 +74,7 @@ jobs:
 
           # This upload directory mimics the structure for
           # standard user uploads on the SRA FTP server (not institutional uploads)
-          # It's needed for testing and development as of 2025-10-01. 
+          # It's needed for testing and development as of 2025-10-01.
           # May not be needed in future.
           sudo mkdir -p /home/ftpuser/uploads/ftpuser
           sudo chown -R ftpuser:ftpuser /home/ftpuser/uploads/ftpuser
@@ -180,5 +180,4 @@ jobs:
           SUBMITDATAIRIDANEXT_ENA_UPLOAD_USERNAME: "test_ena_user"
           SUBMITDATAIRIDANEXT_ENA_UPLOAD_PASSWORD: "test_ena_password"
         run: |
-          mkdir -p 
           nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --sra_user_account_dirname "ftpuser" --test_upload --outdir ./results
