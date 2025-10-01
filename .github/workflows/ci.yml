@@ -165,5 +165,10 @@ jobs:
           nf-test test
 
       - name: Nextflow run with test profile
+        env:
+          SUBMITDATAIRIDANEXT_SRA_UPLOAD_USERNAME: "ftpuser"
+          SUBMITDATAIRIDANEXT_SRA_UPLOAD_PASSWORD: "ftppass"
+          SUBMITDATAIRIDANEXT_ENA_UPLOAD_USERNAME: "test_ena_user"
+          SUBMITDATAIRIDANEXT_ENA_UPLOAD_PASSWORD: "test_ena_password"
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --upload_username ftpuser --upload_password ftppass --test_upload --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --test_upload --outdir ./results
