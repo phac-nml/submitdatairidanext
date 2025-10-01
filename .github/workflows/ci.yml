@@ -72,6 +72,15 @@ jobs:
           sudo setfacl -b /home/ftpuser/submit/Test
           sudo chmod -R 777 /home/ftpuser/submit
 
+          # This upload directory mimics the structure for
+          # standard user uploads on the SRA FTP server (not institutional uploads)
+          # It's needed for testing and development as of 2025-10-01. 
+          # May not be needed in future.
+          sudo mkdir -p /home/ftpuser/uploads/ftpuser
+          sudo chown -R ftpuser:ftpuser /home/ftpuser/uploads/ftpuser
+          sudo setfacl -b /home/ftpuser/uploads/ftpuser
+          sudo chmod -R 777 /home/ftpuser/uploads
+
           echo "Opening ports 20, 21, and 10000-10010 for FTP"
           sudo iptables -A INPUT -p tcp --dport 21 -j ACCEPT
           sudo iptables -A INPUT -p tcp --dport 20 -j ACCEPT
@@ -171,4 +180,5 @@ jobs:
           SUBMITDATAIRIDANEXT_ENA_UPLOAD_USERNAME: "test_ena_user"
           SUBMITDATAIRIDANEXT_ENA_UPLOAD_PASSWORD: "test_ena_password"
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --sra_user_account_dirname "test_user_123" --test_upload --outdir ./results
+          mkdir -p 
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --sra_user_account_dirname "ftpuser" --test_upload --outdir ./results
