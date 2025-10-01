@@ -171,4 +171,4 @@ jobs:
           SUBMITDATAIRIDANEXT_ENA_UPLOAD_USERNAME: "test_ena_user"
           SUBMITDATAIRIDANEXT_ENA_UPLOAD_PASSWORD: "test_ena_password"
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --test_upload --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --sra_user_account_dirname "test_user_123" --test_upload --outdir ./results
