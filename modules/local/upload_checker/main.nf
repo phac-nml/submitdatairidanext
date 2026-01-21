@@ -18,6 +18,6 @@ process UPLOAD_CHECKER {
     task.workDir.resolve("errors.csv").withWriter { writer ->
         def destination_lower = params.destination.toLowerCase()
         writer.writeLine("sample,sample_name,success,message")  // header
-        failures.each { writer.writeLine "${it[0].irida_id},${it[0].library_name},false,Upload failed" }
+        failures.findAll{ it[0] != null }.each { writer.writeLine "${it[0].irida_id},${it[0].library_name},false,Upload failed" }
     }
 }

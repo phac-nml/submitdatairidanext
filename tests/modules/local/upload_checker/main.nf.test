@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process UPLOAD_CHECKER"
+    script "modules/local/upload_checker/main.nf"
+    process "UPLOAD_CHECKER"
+
+    test("Basic execution, check output.") {
+
+        when {
+            params {
+                outdir = "output"
+            }
+            process {
+                """
+                input[0] = [new Tuple(null, null), new Tuple(["id": "INXT_SAM_AZHI4VYDG3", "irida_id": "INXT_SAM_AZHI4VYDG3", "library_name": "SAMPLE1", "bioproject_accession": "PRJNA123456", "biosample_accession": "SAMN12345678", "library_source": "VIRAL RNA", "library_selection": "PCR", "library_strategy": "AMPLICON", "platform": "ILLUMINA", "instrument_model": "Illumina MiSeq"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            with(process.out.error_report) {
+                assert path(get(0)).readLines().size() == 2
+            }
+        }
+    }
+}
