@@ -76,7 +76,7 @@ def connect_and_login(username: str, password: str, server: str, remote_path: Pa
     """
     ftp = None
     try:
-        ftp = ftplib.FTP(server, user=username, passwd=password)
+        ftp = ftplib.FTP(server, user=username, passwd=password, timeout=3600)
     except ConnectionRefusedError as e:
         logger.error(f"Could not connect to {server} as {username}")
         exit(1)
