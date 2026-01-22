@@ -77,6 +77,7 @@ def connect_and_login(username: str, password: str, server: str, remote_path: Pa
     ftp = None
     try:
         ftp = ftplib.FTP(server, user=username, passwd=password)
+        ftp.set_debuglevel(2)
         ftp.set_pasv(True)
     except ConnectionRefusedError as e:
         logger.error(f"Could not connect to {server} as {username}")
@@ -116,7 +117,11 @@ def upload_file(ftp: ftplib.FTP, file_to_upload: Path, ):
     :return: None
     """
     with open(file_to_upload, 'rb') as f:
-        ftp.storbinary(f"STOR {os.path.basename(file_to_upload)}", f)
+        logger.info("Uploading file...")
+        try:
+            ftp.storbinary(f"STOR {os.path.basename(file_to_upload)}", f, callback=lambda block: logger.debug(f"Sent {len(block)} bytes"))
+        except ftplib.all_errors as e:
+            logger.error(f"FTP error: {e}")
         logger.info(f"Uploaded {file_to_upload}")
 
 
