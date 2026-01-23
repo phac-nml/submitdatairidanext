@@ -1,9 +1,12 @@
 process COMPLETE_SRA_UPLOAD {
     label 'process_single'
 
-    container "${ task.ext.override_configured_container_registry != false ?
-    'docker.io/python:3.10' :
-    'python:3.10' }"
+    // biobb_remote is a lightweight container that includes paramiko.
+    // preferably switch to paramiko-specific container
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/biobb_remote:1.2.2--pyhdfd78af_0' :
+        'biocontainers/biobb_remote:1.2.2--pyhdfd78af_0' }"
 
     input:
     tuple path(submission_xml), path(upload_dir_name)
