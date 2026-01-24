@@ -1,12 +1,10 @@
 process CREATE_SRA_UPLOAD_DIR {
     label 'process_single'
 
-    // biobb_remote is a lightweight container that includes paramiko.
-    // preferably switch to paramiko-specific container
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/biobb_remote:1.2.2--pyhdfd78af_0' :
-        'biocontainers/biobb_remote:1.2.2--pyhdfd78af_0' }"
+        'oras://community.wave.seqera.io/library/paramiko:4.0.0--3788dfafc81b25dc' :
+        'community.wave.seqera.io/library/paramiko:4.0.0--8a888bf2e2712e98' }"
 
     output:
     path("sra_upload_directory_name.txt") , emit: upload_dir_name
