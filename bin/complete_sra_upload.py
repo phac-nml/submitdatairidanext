@@ -50,6 +50,10 @@ def main(args):
     sftp.upload_file(sftp_conn, 'submission.ready')
     logger.info("Uploaded submission.ready file.")
 
+    sftp_conn.close()
+    ssh_conn.close()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Complete an SRA FTP upload')
     parser.add_argument('--ftp-server', type=str, default="sftp-private.ncbi.nlm.nih.gov", help='SFTP server')
