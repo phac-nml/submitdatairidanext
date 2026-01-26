@@ -1,12 +1,11 @@
 process UPLOAD_READS_TO_SRA {
     tag "$meta.id"
     label 'process_single'
-    // Container directive is intentionally using the "override_configure_container_registry" as an example:
-    // How to keep a non-biocontainer/quay.io default, see nextflow.config for details
 
-    container "${ task.ext.override_configured_container_registry != false ?
-    'docker.io/python:3.10' :
-    'python:3.10' }"
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'oras://community.wave.seqera.io/library/paramiko:4.0.0--3788dfafc81b25dc' :
+        'community.wave.seqera.io/library/paramiko:4.0.0--8a888bf2e2712e98' }"
 
     input:
     tuple val(meta), path(reads), path(addfiles_xml), path(upload_dir_name)

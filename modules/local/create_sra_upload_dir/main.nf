@@ -1,9 +1,10 @@
 process CREATE_SRA_UPLOAD_DIR {
     label 'process_single'
 
-    container "${ task.ext.override_configured_container_registry != false ?
-    'docker.io/python:3.10' :
-    'python:3.10' }"
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'oras://community.wave.seqera.io/library/paramiko:4.0.0--3788dfafc81b25dc' :
+        'community.wave.seqera.io/library/paramiko:4.0.0--8a888bf2e2712e98' }"
 
     output:
     path("sra_upload_directory_name.txt") , emit: upload_dir_name
