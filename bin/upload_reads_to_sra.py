@@ -9,13 +9,11 @@ import csv
 import datetime
 import logging
 import os
-import socket
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-import paramiko
-from paramiko.ssh_exception import AuthenticationException, NoValidConnectionsError, SSHException
+import sftp
 
 VERSION = "0.1.0"
 
@@ -63,92 +61,11 @@ def parse_addfiles_xml(addfiles_xml_path: Path) -> dict:
 
     return library
 
-def connect_and_login(username: str, password: str, server: str, remote_path: Path, upload_dir_name: str):
-    """
-    Connects to an SFTP server and logs in
-
-    :param username: FTP username
-    :param password: FTP password
-    :param server: SFTP server
-    :param remote_path: Remote path on the server
-    :param upload_dir_name: Name of the directory to upload files to
-    """
-    ssh = None
-    ftp = None
-    try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(
-            server,
-            port=22,
-            username=username,
-            password=password,
-            allow_agent=False,      # Don't try SSH agent
-            look_for_keys=False,    # Don't look for key files
-            gss_auth=False,         # Don't try GSSAPI
-            gss_kex=False           # Don't try GSSAPI key exchange
-        )
-        ftp = ssh.open_sftp()
-        upload_dir = remote_path / upload_dir_name
-        ftp.chdir(str(upload_dir))
-
-    except AuthenticationException as e:
-        logger.error(f"Authentication failed: {e}")
-        raise
-
-    except NoValidConnectionsError as e:
-        logger.error(f"Could not connect to {server}:22 - check network/firewall: {e}")
-        raise
-
-    except socket.timeout as e:
-        logger.error(f"Connection timed out: {e}")
-        raise
-
-    except SSHException as e:
-        logger.error(f"SSH error: {e}")
-        raise
-
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        raise
-
-    return (ssh, ftp)
-
-def upload_file(sftp: paramiko.SFTPClient, file_to_upload: Path):
-    """
-    Uploads a file to an SFTP server
-
-    :param ftp: FTP connection
-    :param file_to_upload: Path to the file to upload
-    :return: None
-    """
-    def progress_callback(transferred, total):
-        pct = (transferred / total) * 100 if total > 0 else 0
-        logger.debug(f"Transferred {transferred}/{total} bytes ({pct:.1f}%)")
-
-    localpath = file_to_upload
-    remotepath = os.path.basename(file_to_upload)
-    try:
-        sftp.put(localpath, remotepath, callback=progress_callback)
-        logger.info(f"Upload complete: {remotepath}")
-
-        # Verify file exists
-        remote_stat = sftp.stat(remotepath)
-        logger.info(f"Remote file size: {remote_stat.st_size} bytes")
-
-    except socket.timeout as e:
-        logger.error(f"Connection timed out: {e}")
-        raise
-
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        raise
-
 
 def main(args):
 
     upload_dir_name = None
-    with open(args.upload_dir_name, 'r') as f:
+    with open(args.upload_dir_name) as f:
         upload_dir_name = f.read().strip()
         logger.info(f"Upload directory name: {upload_dir_name}")
 
@@ -163,10 +80,15 @@ def main(args):
         logger.error(f"Failed to upload files for library: {library['library_name']}")
         exit(1)
 
+    # Test basic network connectivity before attempting upload
+    if not sftp.test_connectivity(args.ftp_server, 22):
+        exit(1)
+
     ssh_conn = None
-    ftp_conn = None
+    sftp_conn = None
     try:
-        ssh_conn, ftp_conn = connect_and_login(args.ftp_user, args.ftp_password, args.ftp_server, args.remote_path, upload_dir_name)
+        upload_dir_path = args.remote_path / upload_dir_name
+        ssh_conn, sftp_conn = sftp.connect(args.ftp_user, args.ftp_password, args.ftp_server, upload_dir_path)
     except Exception as e:
         logger.error(f"Connection failed: {e}")
         exit(1)
@@ -195,12 +117,15 @@ def main(args):
 
     for file_path in files_to_upload:
         try:
-            upload_file(ftp_conn, file_path)
+            sftp.upload_file(sftp_conn, file_path)
         except Exception as e:
             logger.error(f"Failed to upload {file_path}: {e}")
             library_metadata["sra_upload_status"] = "FAILED"
             library_metadata["timestamp_sra_upload_complete"] = None
-            exit(-1)
+            exit(1)
+
+    sftp_conn.close()
+    ssh_conn.close()
 
     timestamp_upload_complete = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     for library_name, metadata in upload_metadata_by_library_name.items():
