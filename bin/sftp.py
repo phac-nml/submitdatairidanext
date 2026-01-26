@@ -64,9 +64,6 @@ def connect(username: str, password: str, server: str, remote_path: Path):
         sftp = ssh.open_sftp()
         logger.info(f"Connected to {server} as {username}")
 
-        cwd = sftp.getcwd()
-        logger.info(f"Current working directory: {cwd}")
-
         sftp.chdir(str(remote_path))
         logger.info(f"Changed directory to {remote_path}")
 
@@ -101,19 +98,27 @@ def upload_file(sftp: paramiko.SFTPClient, file_to_upload: Path):
     :param file_to_upload: Path to the file to upload
     :return: None
     """
+    pct_threshold = 10
     def progress_callback(transferred, total):
+        nonlocal file_to_upload
+        nonlocal pct_threshold
         pct = (transferred / total) * 100 if total > 0 else 0
-        logger.debug(f"Transferred {transferred}/{total} bytes ({pct:.1f}%)")
+        if pct > pct_threshold:
+            logger.info(f"{file_to_upload} Transferred {transferred}/{total} bytes ({pct:.1f}%)")
+            pct_threshold += 10
 
-    localpath = file_to_upload
-    remotepath = os.path.basename(file_to_upload)
+    local_file_size = os.path.getsize(file_to_upload)
+    logger.info(f"{file_to_upload} Local file size: {local_file_size} bytes")
+
     try:
+        localpath = file_to_upload
+        remotepath = os.path.basename(file_to_upload)
         sftp.put(localpath, remotepath, callback=progress_callback)
-        logger.info(f"Upload complete: {remotepath}")
+        logger.info(f"{remotepath} Upload complete.")
 
         # Verify file exists
         remote_stat = sftp.stat(remotepath)
-        logger.info(f"Remote file size: {remote_stat.st_size} bytes")
+        logger.info(f"{remotepath} Remote file size: {remote_stat.st_size} bytes")
 
     except socket.timeout as e:
         logger.error(f"Connection timed out: {e}")
