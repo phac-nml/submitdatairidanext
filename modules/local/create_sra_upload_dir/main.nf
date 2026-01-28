@@ -11,17 +11,23 @@ process CREATE_SRA_UPLOAD_DIR {
     path "versions.yml"                   , emit: versions
 
     script:
-    // We're temporarily using the sra_user_account_dirname param to control
-    // where uploads go to facilitate testing & development.
-    // In the future we'll likely revert to using the sra_submission_dir param
-    // to control whether uploads go to a test or production area on the SRA FTP server
-    // sra_submission_dir = params.test_upload ? "Test" : "Production"
+    sra_top_submission_dir = params.sra_account_type.toString().equalsIgnoreCase("center") ? "submit" : "uploads"
+    def sra_submission_subdir;
+    if (params.sra_account_type == "center") {
+        if (params.test_upload) {
+            sra_submission_subdir = "Test"
+        } else {
+            sra_submission_subdir = "Production"
+        }
+    } else {
+        sra_submission_subdir = params.sra_user_account_dirname
+    }
     """
     create_sra_upload_dir.py \\
         --ftp-server "${params.sra_ftp_server}" \\
         --ftp-user "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_USERNAME}" \\
         --ftp-password "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_PASSWORD}" \\
-        --remote-path "uploads/${params.sra_user_account_dirname}" \\
+        --remote-path "${sra_top_submission_dir}/${sra_submission_subdir}" \\
         --upload-dir-name "sra_upload_directory_name.txt" \\
         2> >(tee -a sra_upload.log.txt >&2)
 
