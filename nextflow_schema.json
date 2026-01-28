@@ -41,12 +41,14 @@
                     "description": "SRA Account Type.",
                     "enum": ["center", "personal"],
                     "default": "center",
+                    "hidden": true,
                     "fa_icon": "fas fa-globe"
                 },
                 "sra_ftp_server": {
                     "type": "string",
                     "description": "FTP server for SRA submission.",
                     "default": "sftp-private.ncbi.nlm.nih.gov",
+                    "hidden": true,
                     "fa_icon": "fas fa-server"
                 },
                 "test_upload": {
@@ -60,6 +62,7 @@
                     "type": "string",
                     "description": "User account directory name for SRA submission.",
                     "default": "NOT_SET",
+                    "hidden": true,
                     "fa_icon": "fas fa-user",
                     "help_text": "Your SRA user account directory name. See: https://submit.ncbi.nlm.nih.gov/subs/sra/#files_upload_ftp for more information."
                 },
