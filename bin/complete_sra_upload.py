@@ -44,11 +44,11 @@ def main(args):
 
     logger.info(f"Uploaded submission XML file: {args.submission_xml}")
 
-    with open('submission.ready', 'w') as f:
+    with open('submit.ready', 'w') as f:
         pass
-    logger.info("Created submission.ready file.")
-    sftp.upload_file(sftp_conn, 'submission.ready')
-    logger.info("Uploaded submission.ready file.")
+    logger.info("Created submit.ready file.")
+    sftp.upload_file(sftp_conn, 'submit.ready')
+    logger.info("Uploaded submit.ready file.")
 
     sftp_conn.close()
     ssh_conn.close()
