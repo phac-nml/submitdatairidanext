@@ -7,6 +7,7 @@ import csv
 import json
 import logging
 import sys
+import uuid
 
 import xml.etree.ElementTree as ET
 
@@ -30,16 +31,6 @@ def convert_to_xml(submission_data: dict) -> ET.ElementTree:
     """
     root = ET.Element("AddFiles", {"target_db": "SRA"})
 
-    bioproject_attribute_ref_id_element = ET.SubElement(root, "AttributeRefId", {"name": "BioProject"})
-    bioproject_attribute_ref_id_container_element = ET.SubElement(bioproject_attribute_ref_id_element, "RefId")
-    bioproject_primary_id_element = ET.SubElement(bioproject_attribute_ref_id_container_element, "PrimaryId", {"db": "BioProject"})
-    bioproject_primary_id_element.text = submission_data['bioproject_accession']
-
-    biosample_attribute_ref_id_element = ET.SubElement(root, "AttributeRefId", {"name": "BioSample"})
-    biosample_attribute_ref_id_container_element = ET.SubElement(biosample_attribute_ref_id_element, "RefId")
-    biosample_primary_id_element = ET.SubElement(biosample_attribute_ref_id_container_element, "PrimaryId", {"db": "BioSample"})
-    biosample_primary_id_element.text = submission_data['biosample_accession']
-
     for fastq in submission_data['sequenced_library_attributes']["fastq_files"]:
         add_file_element = ET.SubElement(root, "File", {"file_path": fastq["filename"]})
         data_type_element = ET.SubElement(add_file_element, "DataType")
@@ -50,6 +41,21 @@ def convert_to_xml(submission_data: dict) -> ET.ElementTree:
         if attribute_name not in excluded_attributes:
             attribute_element = ET.SubElement(root, "Attribute", {"name": attribute_name})
             attribute_element.text = attribute_value
+
+    bioproject_attribute_ref_id_element = ET.SubElement(root, "AttributeRefId", {"name": "BioProject"})
+    bioproject_attribute_ref_id_container_element = ET.SubElement(bioproject_attribute_ref_id_element, "RefId")
+    bioproject_primary_id_element = ET.SubElement(bioproject_attribute_ref_id_container_element, "PrimaryId", {"db": "BioProject"})
+    bioproject_primary_id_element.text = submission_data['bioproject_accession']
+
+    biosample_attribute_ref_id_element = ET.SubElement(root, "AttributeRefId", {"name": "BioSample"})
+    biosample_attribute_ref_id_container_element = ET.SubElement(biosample_attribute_ref_id_element, "RefId")
+    biosample_primary_id_element = ET.SubElement(biosample_attribute_ref_id_container_element, "PrimaryId", {"db": "BioSample"})
+    biosample_primary_id_element.text = submission_data['biosample_accession']
+
+    identifier = submission_data['identifier']
+    identifier_element = ET.SubElement(root, "Identifier")
+    spuid_element = ET.SubElement(identifier_element, "SPUID", {"spuid_namespace": identifier['spuid_namespace']})
+    spuid_element.text = identifier['local_id']
 
     tree = ET.ElementTree(root)
 
@@ -79,6 +85,10 @@ def main(args):
         args.fastq2 = None
 
     sample_submission = {
+        "identifier": {
+            "spuid_namespace": args.spuid_namespace,
+            "local_id": f"ACTION__ADDFILES__{args.library_name}__{str(uuid.uuid4())}",
+        },
         "bioproject_accession": args.bioproject_accession,
         "biosample_accession": args.biosample_accession,
         "platform": args.platform,  # The platform is not required as an attribute in the XML. Stashing it here for now, will be excluded from the output.
@@ -116,6 +126,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create an SRA Submission XML file')
+    parser.add_argument('--spuid-namespace', type=str, default="PHAC-NML", help="NCBI SPUID Namespace")
     parser.add_argument('--bioproject-accession', type=str, required=True, help="BioProject Accession")
     parser.add_argument('--biosample-accession', type=str, required=True, help="BioSample Accession")
     parser.add_argument('--platform', type=str, default="ILLUMINA", help="Sequencing Platform (default: 'ILLUMINA')")

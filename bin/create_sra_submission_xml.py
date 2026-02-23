@@ -53,9 +53,19 @@ def build_submission_xml(addfiles_trees: list[ET.ElementTree]) -> ET.ElementTree
     """
     root = ET.Element("Submission")
 
+    description_element = ET.SubElement(root, "Description")
+    org_attributes = {
+        "role": "owner",
+        "type": "institute",
+    }
+    organization_element = ET.SubElement(description_element, "Organization", org_attributes)
+    name_element = ET.SubElement(organization_element, "Name")
+    name_element.text = args.organization_name
+
     action_element = ET.SubElement(root, "Action")
     for addfiles_tree in addfiles_trees:
         action_element.append(addfiles_tree.getroot())
+
 
     tree = ET.ElementTree(root)
 
@@ -98,6 +108,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create an SRA Submission XML file by combining AddFiles XML files')
+    parser.add_argument('--organization-name', default="National Microbiology Laboratory, Public Health Agency of Canada")
     parser.add_argument('addfiles_xmls', type=str, nargs='+', help='AddFiles XML files')
     parser.add_argument('--output', type=str, help='Output file')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
