@@ -10,22 +10,22 @@ process RENAME_READS {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("${meta.library_name}_R*.f*q*"), emit: renamed_reads
+    tuple val(meta), path("${meta.library_name}_R*.renamed.f*q*"), emit: renamed_reads
 
     script:
     """
     # Rename reads to match the library name
     # Check file types and rename accordingly
     if [[ ${reads[0]} == *.gz ]]; then
-        mv ${reads[0]} ${meta.library_name}_R1.fastq.gz
+        mv -f -n ${reads[0]} ${meta.library_name}_R1.renamed.fastq.gz
     else
-        mv ${reads[0]} ${meta.library_name}_R1.fastq
+        mv -f -n ${reads[0]} ${meta.library_name}_R1.renamed.fastq
     fi
 
     if [[ ${reads[1]} == *.gz ]]; then
-        mv ${reads[1]} ${meta.library_name}_R2.fastq.gz
+        mv -f -n ${reads[1]} ${meta.library_name}_R2.renamed.fastq.gz
     else
-        mv ${reads[1]} ${meta.library_name}_R2.fastq
+        mv -f -n ${reads[1]} ${meta.library_name}_R2.renamed.fastq
     fi
     """
 }
