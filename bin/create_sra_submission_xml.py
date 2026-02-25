@@ -68,6 +68,7 @@ def build_submission_xml(addfiles_trees: list[ET.ElementTree]) -> ET.ElementTree
         if addfiles_tree_root:
             action_element.append(addfiles_tree_root)
 
+
     tree = ET.ElementTree(root)
 
     return tree
