@@ -62,8 +62,8 @@ def build_submission_xml(addfiles_trees: list[ET.ElementTree]) -> ET.ElementTree
     name_element = ET.SubElement(organization_element, "Name")
     name_element.text = args.organization_name
 
-    action_element = ET.SubElement(root, "Action")
     for addfiles_tree in addfiles_trees:
+        action_element = ET.SubElement(root, "Action")
         action_element.append(addfiles_tree.getroot())
 
 
