@@ -19,7 +19,7 @@ process CREATE_SRA_SUBMISSION_XML {
     """
     create_sra_submission_xml.py \\
         ${addfiles_xmls} \\
-        --organization-name ${params.submitter_organization_name} \\
+        --organization-name "${params.submitter_organization_name}" \\
         --output submission.xml
 
     cat <<-END_VERSIONS > versions.yml
