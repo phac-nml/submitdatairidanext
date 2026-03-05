@@ -56,11 +56,6 @@ def main(args):
 
     library_name = upload_manifest.get("library_name", None)
 
-    # Temporarily inducing failure on one test input to test error handling
-    if library_name.startswith('FAILME'):
-        logger.error(f"Failed to upload files for library: {library_name}")
-        exit(1)
-
     if not library_name:
         logger.error("Library name not found in upload manifest.")
         exit(1)
