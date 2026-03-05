@@ -66,6 +66,14 @@
                     "fa_icon": "fas fa-user",
                     "help_text": "Your SRA user account directory name. See: https://submit.ncbi.nlm.nih.gov/subs/sra/#files_upload_ftp for more information."
                 },
+                "submitter_organization_name": {
+                    "type": "string",
+                    "description": "Name of the organization that is performing the submission.",
+                    "default": "National Microbiology Laboratory, Public Health Agency of Canada",
+                    "hidden": true,
+                    "fa_icon": "fas fa-user",
+                    "help_text": "This will be included as the organization name in the submission.xml file."
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
