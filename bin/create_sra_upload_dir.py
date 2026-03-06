@@ -18,8 +18,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 def main(args):
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    # get UTC timestamp to ensure directory names are consistently ordered
+    timezone = datetime.timezone.utc
+    timestamp = datetime.datetime.now(timezone).strftime("%Y%m%dT%H%M%S") + 'Z'
     upload_dir_name = f"{timestamp}-submission"
+    if args.upload_dir_suffix and args.upload_dir_suffix != '':
+        upload_dir_name += f"-{args.upload_dir_suffix}"
 
     # Test basic network connectivity before attempting to create upload dir
     if not sftp.test_connectivity(args.ftp_server, 22):
@@ -43,6 +47,7 @@ if __name__ == "__main__":
     parser.add_argument('--ftp-password', type=str, default="anonymous", help='FTP password')
     parser.add_argument('--remote-path', type=Path, help='Remote path on server')
     parser.add_argument('--upload-dir-name', type=Path, default="upload_directory_name.txt", help='File containing upload directory name')
+    parser.add_argument('--upload-dir-suffix', type=str, default="", help='Suffix for upload dir name (default: "")')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
     args = parser.parse_args()
     main(args)

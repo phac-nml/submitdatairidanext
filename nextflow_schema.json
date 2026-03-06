@@ -51,6 +51,15 @@
                     "hidden": true,
                     "fa_icon": "fas fa-server"
                 },
+                "upload_dir_suffix": {
+                    "type": "string",
+                    "pattern": "^[\\w\\-]*$",
+                    "maxLength": 64,
+                    "description": "Suffix to add onto upload directory, to assist in locating it on the remote server (max. 64 chars).",
+                    "default": "",
+                    "hidden": true,
+                    "fa_icon": "fas fa-folder-open"
+                },
                 "test_upload": {
                     "type": "boolean",
                     "description": "Submit a test upload.",
