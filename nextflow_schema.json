@@ -53,8 +53,8 @@
                 },
                 "upload_dir_suffix": {
                     "type": "string",
-                    "pattern": "^\\w*\\$",
-                    "description": "Suffix to add onto upload directory, to assist in locating it on the remote server.",
+                    "pattern": "^\\w{0,64}\\$",
+                    "description": "Suffix to add onto upload directory, to assist in locating it on the remote server (max. 64 chars).",
                     "default": "",
                     "hidden": true,
                     "fa_icon": "fas fa-folder-open"
