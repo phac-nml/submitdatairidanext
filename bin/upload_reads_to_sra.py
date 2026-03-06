@@ -75,11 +75,6 @@ def main(args):
 
     library = parse_addfiles_xml(args.addfiles_xml)
 
-    # Temporarily inducing failure on one test input to test error handling
-    if library['library_name'].startswith('FAILME'):
-        logger.error(f"Failed to upload files for library: {library['library_name']}")
-        exit(1)
-
     # Test basic network connectivity before attempting upload
     if not sftp.test_connectivity(args.ftp_server, 22):
         exit(1)
