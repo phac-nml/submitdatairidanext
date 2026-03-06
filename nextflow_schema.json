@@ -53,7 +53,7 @@
                 },
                 "upload_dir_suffix": {
                     "type": "string",
-                    "pattern": "^[\\w\\-]*\\$",
+                    "pattern": "^[\\w\\-]*$",
                     "maxLength": 64,
                     "description": "Suffix to add onto upload directory, to assist in locating it on the remote server (max. 64 chars).",
                     "default": "",
