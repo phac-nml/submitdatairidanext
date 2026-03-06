@@ -20,7 +20,7 @@ process APPEND_ERRORS_TO_UPLOAD_METADATA {
     append_errors_to_upload_metadata.py \\
         --destination "${params.destination}" \\
         --errors "${errors_csv}" \\
-        --upload-metadata "${upload_metadata}" \\
+        --upload-metadata ${upload_metadata} \\
         > metadata.json
 
     cat <<-END_VERSIONS > versions.yml

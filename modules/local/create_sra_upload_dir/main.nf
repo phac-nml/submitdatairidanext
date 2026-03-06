@@ -29,6 +29,7 @@ process CREATE_SRA_UPLOAD_DIR {
         --ftp-password "\${SUBMITDATAIRIDANEXT_SRA_UPLOAD_PASSWORD}" \\
         --remote-path "${sra_top_submission_dir}/${sra_submission_subdir}" \\
         --upload-dir-name "sra_upload_directory_name.txt" \\
+        --upload-dir-suffix "${params.upload_dir_suffix}" \\
         2> >(tee -a sra_upload.log.txt >&2)
 
     cat <<-END_VERSIONS > versions.yml

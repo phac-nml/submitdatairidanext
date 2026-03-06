@@ -49,7 +49,7 @@ workflow SUBMIT_TO_SRA {
 
     UPLOAD_CHECKER(failed_uploads)
     error_report = UPLOAD_CHECKER.out.error_report
-    collected_upload_metadata_files = UPLOAD_READS_TO_SRA.out.upload_metadata.map{ it -> it[1] }.collect()
+    collected_upload_metadata_files = UPLOAD_READS_TO_SRA.out.upload_metadata.map{ it -> it[1] }.collect().map{ it -> [it] }.view()
     APPEND_ERRORS_TO_UPLOAD_METADATA(collected_upload_metadata_files.combine(error_report))
     ch_versions = ch_versions.mix(APPEND_ERRORS_TO_UPLOAD_METADATA.out.versions)
 
