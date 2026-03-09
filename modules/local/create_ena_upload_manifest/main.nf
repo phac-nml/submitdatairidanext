@@ -2,9 +2,6 @@ process CREATE_ENA_UPLOAD_MANIFEST {
     tag "$meta.id"
     label 'process_single'
 
-    // Container directive is intentionally using the "override_configure_container_registry" as an example:
-    // How to keep a non-biocontainer/quay.io default, see nextflow.config for details
-
     container "${ task.ext.override_configured_container_registry != false ?
     'docker.io/python:3.10' :
     'python:3.10' }"
@@ -22,13 +19,18 @@ process CREATE_ENA_UPLOAD_MANIFEST {
     script:
     """
     create_ena_upload_manifest_json.py \\
-        --study-accession "" \\
-        --sample-accession "" \\
-        --experiment-name "" \\
-        --library-name "" \\
+        --study-accession "${meta.bioproject_accession}" \\
+        --sample-accession "${meta.biosample_accession}" \\
+        --experiment-name "${meta.bioproject_accession}-${meta.platform}-${meta.id}" \\
+        --library-name "${meta.library_name}" \\
+        --library-source "${meta.library_source}" \\
+        --library-strategy "${meta.library_strategy}" \\
+        --library-selection "${meta.library_selection}" \\
+        --platform "${meta.platform}" \\
+        --instrument-model "${meta.instrument_model}" \\
         --fastq1 ${reads[0]} \\
         --fastq2 ${reads[1]} \\
-        --output ${meta.id}_ena_upload_manifest.json
+        --output ${meta.library_name}_ena_upload_manifest.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

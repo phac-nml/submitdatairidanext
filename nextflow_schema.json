@@ -29,16 +29,6 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
-                "upload_username": {
-                    "type": "string",
-                    "description": "Username for upload to INSDC.",
-                    "fa_icon": "fas fa-user"
-                },
-                "upload_password": {
-                    "type": "string",
-                    "description": "Password for upload to INSDC.",
-                    "fa_icon": "fas fa-key"
-                },
                 "destination": {
                     "type": "string",
                     "description": "Destination for the data submission.",
@@ -46,17 +36,52 @@
                     "default": "SRA",
                     "fa_icon": "fas fa-globe"
                 },
-                "experiment_name": {
+                "sra_account_type": {
                     "type": "string",
-                    "pattern": "^\\S+$",
-                    "description": "The name of the experiment associated with the data submission.",
-                    "fa_icon": "fas fa-tag"
+                    "description": "SRA Account Type.",
+                    "enum": ["center", "personal"],
+                    "default": "center",
+                    "hidden": true,
+                    "fa_icon": "fas fa-globe"
                 },
-                "bioproject_accession": {
+                "sra_ftp_server": {
                     "type": "string",
-                    "pattern": "^\\S+$",
-                    "description": "The BioProject accession associated with the data submission (must exist prior to upload).",
-                    "fa_icon": "fas fa-tag"
+                    "description": "FTP server for SRA submission.",
+                    "default": "sftp-private.ncbi.nlm.nih.gov",
+                    "hidden": true,
+                    "fa_icon": "fas fa-server"
+                },
+                "upload_dir_suffix": {
+                    "type": "string",
+                    "pattern": "^[\\w\\-]*$",
+                    "maxLength": 64,
+                    "description": "Suffix to add onto upload directory, to assist in locating it on the remote server (max. 64 chars).",
+                    "default": "",
+                    "hidden": true,
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "test_upload": {
+                    "type": "boolean",
+                    "description": "Submit a test upload.",
+                    "default": "false",
+                    "fa_icon": "fas fa-bug",
+                    "help_text": "If set to `true`, the pipeline will submit a test upload to the SRA or ENA server."
+                },
+                "sra_user_account_dirname": {
+                    "type": "string",
+                    "description": "User account directory name for SRA submission.",
+                    "default": "NOT_SET",
+                    "hidden": true,
+                    "fa_icon": "fas fa-user",
+                    "help_text": "Your SRA user account directory name. See: https://submit.ncbi.nlm.nih.gov/subs/sra/#files_upload_ftp for more information."
+                },
+                "submitter_organization_name": {
+                    "type": "string",
+                    "description": "Name of the organization that is performing the submission.",
+                    "default": "National Microbiology Laboratory, Public Health Agency of Canada",
+                    "hidden": true,
+                    "fa_icon": "fas fa-user",
+                    "help_text": "This will be included as the organization name in the submission.xml file."
                 },
                 "email": {
                     "type": "string",
@@ -217,6 +242,13 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "max_jobs_with_network_connections": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 1,
+                    "description": "Maximum number of jobs with network connections allowed to run at once",
+                    "hidden": true
                 }
             }
         }

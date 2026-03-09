@@ -25,10 +25,130 @@ jobs:
       matrix:
         NXF_VER:
           - "23.04.0"
+          - "24.10.3"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Install vsftpd
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y vsftpd
+
+      - name: Configure vsftpd
+        run: |
+          # Backup original config
+          sudo mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
+
+          # Write vsftpd config
+          echo "Creating vsftpd config:"
+          cat <<EOF | sudo tee /etc/vsftpd.conf
+          listen=NO
+          listen_ipv6=YES
+          listen_port=21
+          listen_address=::1
+          anonymous_enable=NO
+          write_enable=YES
+          local_enable=YES
+          chroot_local_user=YES
+          allow_writeable_chroot=YES
+          pasv_enable=YES
+          pasv_min_port=10000
+          pasv_max_port=10010
+          pasv_address=::1
+          log_ftp_protocol=YES
+          xferlog_enable=YES
+          xferlog_std_format=NO
+          user_sub_token=\$USER
+          local_root=/home/\$USER
+          EOF
+
+          # Create FTP user and home dir
+          sudo useradd -m ftpuser
+          echo "ftpuser:ftppass" | sudo chpasswd
+          sudo chmod 755 /home/ftpuser
+          sudo mkdir -p /home/ftpuser/submit/Test
+          sudo chown -R ftpuser:ftpuser /home/ftpuser
+          sudo setfacl -b /home/ftpuser/submit/Test
+          sudo chmod -R 777 /home/ftpuser/submit
+
+          # This upload directory mimics the structure for
+          # standard user uploads on the SRA FTP server (not institutional uploads)
+          # It's needed for testing and development as of 2025-10-01.
+          # May not be needed in future.
+          sudo mkdir -p /home/ftpuser/uploads/ftpuser
+          sudo chown -R ftpuser:ftpuser /home/ftpuser/uploads/ftpuser
+          sudo setfacl -b /home/ftpuser/uploads/ftpuser
+          sudo chmod -R 777 /home/ftpuser/uploads
+
+          echo "Opening ports 20, 21, and 10000-10010 for FTP"
+          sudo iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+          sudo iptables -A INPUT -p tcp --dport 20 -j ACCEPT
+          # Open passive ports
+          sudo iptables -A INPUT -p tcp --dport 10000:10010 -j ACCEPT
+          # Check if iptables rules are applied
+          echo "Checking iptables rules..."
+          sudo iptables -L -n
+          echo "Check which process is using port 21"
+          sudo lsof -i :21
+      - name: Confirm permissions
+        run: |
+          ls -ld /home/ftpuser/submit/Test
+          getfacl /home/ftpuser/submit/Test
+      - name: Start FTP server
+        run: |
+          sudo service vsftpd restart
+          sleep 5  # Give server a moment to come up
+      - name: Check FTP server status
+        run: |
+          sudo service vsftpd status
+          # Check if the FTP server is running
+          echo "Checking if FTP server is running..."
+          if ! pgrep -x "vsftpd" > /dev/null; then
+            echo "FTP server is not running!"
+            exit 1
+          fi
+
+          # Check if the FTP server is listening on port 21
+          echo "Checking if FTP server is listening on port 21..."
+          sudo netstat -tuln | grep ':21'
+          if ! sudo netstat -tuln | grep ':21' > /dev/null; then
+            echo "FTP server is not listening on port 21!"
+            exit 1
+          fi
+
+          # Check if the FTP server is accessible
+          echo "Checking if FTP server is accessible..."
+          if ! curl -s --user ftpuser:ftppass ftp://localhost:21/ > /dev/null; then
+            echo "FTP server is not accessible!"
+            exit 1
+          fi
+          echo "FTP server is running and accessible!"
+
+      - name: Perform Test FTP Upload
+        run: |
+          # Create a test file
+          echo "This is a test file." > testfile.txt
+          # Upload the test file to the FTP server
+          curl -v -T testfile.txt ftp://ftpuser:ftppass@localhost/submit/Test/testfile.txt || {
+            echo "Upload failed. Capturing vsftpd logs..."
+            sudo cat /var/log/vsftpd.log
+            exit 1
+          }
+
+          # Check if the file was uploaded successfully
+          if curl -s --user ftpuser:ftppass ftp://localhost/submit/Test/testfile.txt | grep -q "This is a test file."; then
+            echo "Test file uploaded successfully!"
+          else
+            echo "Failed to upload test file!"
+            exit 1
+          fi
+
+      - name: Install Apptainer
+        run: |
+          wget https://github.com/apptainer/apptainer/releases/download/v1.4.0/apptainer_1.4.0_amd64.deb
+          sudo apt install -y ./apptainer_1.4.0_amd64.deb
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
@@ -51,9 +171,16 @@ jobs:
           sudo mv nf-test /usr/local/bin/
 
       - name: Run nf-test
+        continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         run: |
           nf-test test
 
       - name: Nextflow run with test profile
+        env:
+          SUBMITDATAIRIDANEXT_SRA_UPLOAD_USERNAME: "ftpuser"
+          SUBMITDATAIRIDANEXT_SRA_UPLOAD_PASSWORD: "ftppass"
+          SUBMITDATAIRIDANEXT_ENA_UPLOAD_USERNAME: "test_ena_user"
+          SUBMITDATAIRIDANEXT_ENA_UPLOAD_PASSWORD: "test_ena_password"
+        continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,singularity --sra_ftp_server localhost --sra_user_account_dirname "ftpuser" --test_upload --outdir ./results

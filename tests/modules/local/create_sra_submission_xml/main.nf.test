@@ -8,17 +8,24 @@ nextflow_process {
 
         when {
             params {
-                outdir = "tests/results"
+                outdir = "output"
             }
             process {
                 """
-                input[0] = new Tuple(["id": "SAMPLE1", "irida_id": "SAMPLE1", "taxon_id": "2697049", "collection_date": "2023", "country": "Canada"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
+                input[0] = [file("$baseDir/tests/data/SAMPLE1_sra_addfiles.xml")]
                 """
             }
         }
 
         then {
             assert process.success
+            with(process.out) {
+                def xmlString = path(submission_xml[0]).getText()
+                def parser = new groovy.xml.XmlSlurper()
+                def xmlManifestRootNode = parser.parseText(xmlString)
+
+                assert xmlManifestRootNode.name() == 'Submission'
+            }
         }
 
     }

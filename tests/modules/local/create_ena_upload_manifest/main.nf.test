@@ -8,19 +8,33 @@ nextflow_process {
 
         when {
             params {
-                outdir = "tests/results"
+                outdir = "output"
             }
             process {
                 """
-                input[0] = new Tuple(["id": "SAMPLE1", "irida_id": "SAMPLE1", "taxon_id": "2697049", "collection_date": "2023", "country": "Canada"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
+                input[0] = new Tuple(["id": "INXT_SAM_AZHI4VYDG3", "irida_id": "INXT_SAM_AZHI4VYDG3", "library_name": "SAMPLE1", "bioproject_accession": "PRJNA123456", "biosample_accession": "SAMN12345678", "library_source": "VIRAL RNA", "library_selection": "PCR", "library_strategy": "AMPLICON", "platform": "ILLUMINA", "instrument_model": "Illumina MiSeq"], [file("$baseDir/tests/data/SAMPLE1_R1.fastq.gz"), file("$baseDir/tests/data/SAMPLE1_R2.fastq.gz")])
                 """
             }
         }
 
         then {
             assert process.success
+            with(process.out) {
+                // parse output json file
+                def json_string = path(upload_manifest.get(0)[1]).getText()
+                def parser = new groovy.json.JsonSlurper()
+                def json_manifest = parser.parseText(json_string)
+                assert json_manifest.study == "PRJNA123456"
+                assert json_manifest.sample == "SAMN12345678"
+                assert json_manifest.platform == "ILLUMINA"
+                assert json_manifest.instrument == "Illumina MiSeq"
+                assert json_manifest.library_name == "SAMPLE1"
+                assert json_manifest.library_source == "VIRAL RNA"
+                assert json_manifest.library_strategy == "AMPLICON"
+                assert json_manifest.library_selection == "PCR"
+                assert json_manifest.fastq[0].value == "SAMPLE1_R1.fastq.gz"
+                assert json_manifest.fastq[1].value == "SAMPLE1_R2.fastq.gz"
+            }
         }
-
     }
-
 }

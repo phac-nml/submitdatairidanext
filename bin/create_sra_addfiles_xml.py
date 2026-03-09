@@ -1,0 +1,144 @@
+#!/usr/bin/env python
+
+"""Create the AddFiles element for one sample of an SRA Submission XML file."""
+
+import argparse
+import csv
+import json
+import logging
+import sys
+import uuid
+
+import xml.etree.ElementTree as ET
+
+from pathlib import Path
+from typing import Optional
+
+VERSION = "0.1.0"
+
+logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def convert_to_xml(submission_data: dict) -> ET.ElementTree:
+    """
+    Convert a dictionary of submission data to an XML element tree.
+
+    :param submission_data: The submission data
+    :type submission_data: dict
+    :return: The sample registration XML element tree
+    :rtype: ET.ElementTree
+    """
+    root = ET.Element("AddFiles", {"target_db": "SRA"})
+
+    for fastq in submission_data['sequenced_library_attributes']["fastq_files"]:
+        add_file_element = ET.SubElement(root, "File", {"file_path": fastq["filename"]})
+        data_type_element = ET.SubElement(add_file_element, "DataType")
+        data_type_element.text = "generic-data"
+
+    excluded_attributes = ["fastq_files"]
+    for attribute_name, attribute_value in submission_data['sequenced_library_attributes'].items():
+        if attribute_name not in excluded_attributes:
+            attribute_element = ET.SubElement(root, "Attribute", {"name": attribute_name})
+            attribute_element.text = attribute_value
+
+    bioproject_attribute_ref_id_element = ET.SubElement(root, "AttributeRefId", {"name": "BioProject"})
+    bioproject_attribute_ref_id_container_element = ET.SubElement(bioproject_attribute_ref_id_element, "RefId")
+    bioproject_primary_id_element = ET.SubElement(bioproject_attribute_ref_id_container_element, "PrimaryId", {"db": "BioProject"})
+    bioproject_primary_id_element.text = submission_data['bioproject_accession']
+
+    biosample_attribute_ref_id_element = ET.SubElement(root, "AttributeRefId", {"name": "BioSample"})
+    biosample_attribute_ref_id_container_element = ET.SubElement(biosample_attribute_ref_id_element, "RefId")
+    biosample_primary_id_element = ET.SubElement(biosample_attribute_ref_id_container_element, "PrimaryId", {"db": "BioSample"})
+    biosample_primary_id_element.text = submission_data['biosample_accession']
+
+    identifier = submission_data['identifier']
+    identifier_element = ET.SubElement(root, "Identifier")
+    spuid_element = ET.SubElement(identifier_element, "SPUID", {"spuid_namespace": identifier['spuid_namespace']})
+    spuid_element.text = identifier['local_id']
+
+    tree = ET.ElementTree(root)
+
+    return tree
+
+def write_output_xml(output_xml_tree: ET.ElementTree, output_xml_path: Optional[Path]):
+    """
+    Write output XML to file (or stdout if no output path provided)
+    :param output_xml_tree: XML data to write
+    :type output_xml_tree: ET.ElementTree
+    :param output_xml_path: Path to write XML file (or print to stdout if None)
+    :type output_xml_path: Optional[Path]
+    :return: None
+    :rtype: None
+    """
+    ET.indent(output_xml_tree, space="  ", level=0)
+    if output_xml_path:
+        output_xml_tree.write(output_xml_path, encoding="utf-8", xml_declaration=False)
+        with open(output_xml_path, "a") as f:
+            f.write('\n')
+    else:
+        ET.dump(output_xml_tree)
+
+def main(args):
+
+    if args.fastq2 == 'null':
+        args.fastq2 = None
+
+    library_name_stripped = args.library_name.strip()
+    sample_submission = {
+        "identifier": {
+            "spuid_namespace": args.spuid_namespace,
+            "local_id": f"{library_name_stripped}",
+        },
+        "bioproject_accession": args.bioproject_accession,
+        "biosample_accession": args.biosample_accession,
+        "platform": args.platform,  # The platform is not required as an attribute in the XML. Stashing it here for now, will be excluded from the output.
+        "sequenced_library_attributes": {
+            "instrument_model": args.instrument_model,
+            "library_name": library_name_stripped,
+            "library_source": args.library_source,
+            "library_selection": args.library_selection,
+            "library_strategy": args.library_strategy,
+            "library_layout": "PAIRED" if args.fastq2 else "SINGLE",
+            "fastq_files": [],
+        },
+    }
+    read_type = "paired" if args.fastq2 else "single"
+    fastq_1 = {
+        "filename": args.fastq1.name,
+        "read_type": read_type,
+    }
+    sample_submission['sequenced_library_attributes']["fastq_files"].append(fastq_1)
+    if args.fastq2:
+        fastq_2 = {
+            "filename": args.fastq2.name,
+            "read_type": read_type,
+        }
+        sample_submission['sequenced_library_attributes']['fastq_files'].append(fastq_2)
+
+    xml_tree = convert_to_xml(sample_submission)
+
+    if args.output:
+        output_xml_path = Path(args.output)
+    else:
+        output_xml_path = None
+    write_output_xml(xml_tree, output_xml_path)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Create an SRA Submission XML file')
+    parser.add_argument('--spuid-namespace', type=str, default="PHAC-NML", help="NCBI SPUID Namespace")
+    parser.add_argument('--bioproject-accession', type=str, required=True, help="BioProject Accession")
+    parser.add_argument('--biosample-accession', type=str, required=True, help="BioSample Accession")
+    parser.add_argument('--platform', type=str, default="ILLUMINA", help="Sequencing Platform (default: 'ILLUMINA')")
+    parser.add_argument('--instrument-model', type=str, default="Illumina MiSeq", help="Sequencing instrument (default: 'Illumina MiSeq')")
+    parser.add_argument('--library-name', type=str, help="Library Name")
+    parser.add_argument('--library-source', type=str, default="GENOMIC", help="Library Source (default: 'GENOMIC')")
+    parser.add_argument('--library-selection', type=str, default="RANDOM", help="Library Selection (default: 'RANDOM')")
+    parser.add_argument('--library-strategy', type=str, default="WGS", help="Library Strategy (default: 'WGS')")
+    parser.add_argument('--fastq1', type=Path, required=True, help="Path to FASTQ file 1")
+    parser.add_argument('--fastq2', type=Path, help="Path to FASTQ file 2")
+    parser.add_argument('--output', type=str, help='Output file')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}', help='Show the version of the script')
+    args = parser.parse_args()
+    main(args)
