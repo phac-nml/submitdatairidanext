@@ -84,17 +84,18 @@ def main(args):
     if args.fastq2 == 'null':
         args.fastq2 = None
 
+    library_name_stripped = args.library_name.strip()
     sample_submission = {
         "identifier": {
             "spuid_namespace": args.spuid_namespace,
-            "local_id": f"ACTION__ADDFILES__{args.library_name}__{str(uuid.uuid4())}",
+            "local_id": f"{library_name_stripped}",
         },
         "bioproject_accession": args.bioproject_accession,
         "biosample_accession": args.biosample_accession,
         "platform": args.platform,  # The platform is not required as an attribute in the XML. Stashing it here for now, will be excluded from the output.
         "sequenced_library_attributes": {
             "instrument_model": args.instrument_model,
-            "library_name": args.library_name,
+            "library_name": library_name_stripped,
             "library_source": args.library_source,
             "library_selection": args.library_selection,
             "library_strategy": args.library_strategy,
