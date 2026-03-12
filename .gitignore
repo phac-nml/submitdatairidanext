@@ -10,3 +10,5 @@ testing*
 *.pyc
 *.swp
 .vscode
+/.nf-test/
+/.nf-test.log
