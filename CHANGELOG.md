@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Adding attachment of upload metadata CSV files to samples and adjusting which metadata fields to save to samples. [PR 67](https://github.com/phac-nml/submitdatairidanext/pull/67)
 - Removed some unneeded code. [PR 67](https://github.com/phac-nml/submitdatairidanext/pull/67)
 
 ## [1.0.0] - 2026-03-09
