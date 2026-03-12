@@ -15,3 +15,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release of phac-nml/submitdatairidanext. Enables upload of sequence reads from IRIDA Next to the NCBI SRA database.
 
 [1.0.0]: https://github.com/phac-nml/submitdatairidanext/releases/tag/1.0.0
+[1.0.1]: https://github.com/phac-nml/submitdatairidanext/releases/tag/1.0.1
