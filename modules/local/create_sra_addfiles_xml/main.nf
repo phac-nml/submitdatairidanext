@@ -3,7 +3,7 @@ process CREATE_SRA_ADDFILES_XML {
     label 'process_single'
 
     container "${ task.ext.override_configured_container_registry != false ?
-    'docker.io/python:3.10' :
+    'biocontainers/python:3.10.2' :
     'python:3.10' }"
 
     input:
