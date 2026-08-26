@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: submit_to_sra
+description: Submit sequence data to NCBI SRA
+keywords:
+  - "data sharing"
+authors:
+  - "@dfornika"
+maintainers:
+  - "@dfornika"
+output:
+  - versions:
+      type: list
+      description: |
+        List containing: [ path(process_1_versions.yml) path(process_2_versions.yml), ... ]
+        Software versions
