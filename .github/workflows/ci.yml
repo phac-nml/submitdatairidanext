@@ -24,8 +24,8 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "23.04.0"
           - "24.10.3"
+	  - "25.10.4"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
@@ -151,7 +151,7 @@ jobs:
           sudo apt install -y ./apptainer_1.4.0_amd64.deb
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@893c28b667aedeba26e37f296d260ccc5bc4d914  # v3.0.1
         with:
           version: "${{ matrix.NXF_VER }}"
 
