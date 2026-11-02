@@ -1,0 +1,98 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/phac-nml/typingQC/main/assets/schema_output.json",
+    "title": "Data Submission Pipeline for IRIDA Next Schema",
+    "description": "The IRIDA Next Data Submission Pipeline-specific schema used for validating IRIDA Next JSON output data",
+    "type": "object",
+    "properties": {
+        "files": {
+            "type": "object",
+            "properties": {
+                "global": {
+                    "type": "array",
+                    "items": {
+                        "properties": {
+                            "path": {
+                                "anyOf": [
+                                    {
+                                        "pattern": "^.*create_sra_submission_xml/.*submission.xml$",
+                                        "description": "An envelope for the whole submission that contains information about the submission."
+                                    },
+                                    {
+                                        "pattern": "^.*upload_checker/.*errors.csv$",
+                                        "description": "Errors that occurred during the submission process."
+                                    }
+                                ]
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "uniqueItems": true
+                },
+                "samples": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "path": {
+                                        "anyOf": [
+                                            {
+                                                "pattern": "^.*upload_reads_to_sra/.*_sra_upload.log.txt$",
+                                                "description": "A log file for the SRA upload."
+                                            },
+                                            {
+                                                "pattern": "^.*upload_reads_to_sra/.*_upload_metadata.csv$",
+                                                "description": "Metadata associated with the upload."
+                                            },
+                                            {
+                                                "pattern": "^.*create_sra_addfiles_xml/.*_sra_addfiles.xml$",
+                                                "description": ""
+                                            },
+                                            {
+                                                "pattern": "^.*upload_reads_to_ena/.*_ena_upload.log.txt$",
+                                                "description": "A log file for the ENA upload."
+                                            },
+                                            {
+                                                "pattern": "^.*create_ena_upload_manifest/.*_ena_upload_manifest.json$",
+                                                "description": "Upload manifest associated with the ENA upload."
+                                            }
+                                        ]
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "uniqueItems": true
+                        }
+                    }
+                }
+            }
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "samples": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "object",
+                            "properties": {
+                                "sra_upload_status": {
+                                    "description": "The status of the SRA upload."
+                                },
+                                "timestamp_sra_upload_start": {
+                                    "description": "The timestamp of the start time of the SRA upload."
+                                },
+                                "timestamp_sra_upload_complete": {
+                                    "description": "The timestamp of the end time of the SRA upload."
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
