@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Updated
 
 - Set nextflow version 25.10.4 to replace 'latest-everything' to confirm compatibility with next IRIDA-Next nextflow version in `.github/workflows` for nf-test. [PR 69](https://github.com/phac-nml/submitdatairidanext/pull/69)
+- The minimum Nextflow version is now 24.10.3. [PR 71](https://github.com/phac-nml/submitdatairidanext/pull/71)
 
 ## [1.0.1] - 2026-03-12
 
