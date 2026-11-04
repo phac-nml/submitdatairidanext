@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/phac-nml/typingQC/main/assets/schema_output.json",
+    "$id": "https://raw.githubusercontent.com/phac-nml/submitdatairidanext/main/assets/schema_output.json",
     "title": "Data Submission Pipeline for IRIDA Next Schema",
     "description": "The IRIDA Next Data Submission Pipeline-specific schema used for validating IRIDA Next JSON output data",
     "type": "object",
